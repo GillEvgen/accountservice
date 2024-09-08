@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="3" failures="3" name="UserControllerTest" time="0.366" errors="0" skipped="0">
+  <properties>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="java.vm.version" value="17.0.8.1+1"/>
+    <property name="sun.boot.library.path" value="C:\Users\Евгений\.sdkman\candidates\java\17.0.8.1-tem\bin"/>
+    <property name="user.country.format" value="BY"/>
+    <property name="maven.multiModuleProjectDirectory" value="C:\Users\Евгений\accountservice"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="path.separator" value=";"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="idea.launcher.port" value="49979"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="RU"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="C:\Users\Евгений\accountservice"/>
+    <property name="java.vm.compressedOopsMode" value="32-bit"/>
+    <property name="java.runtime.version" value="17.0.8.1+1"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\B7E3~1\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="classworlds.conf" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.2\plugins\maven\lib\maven3\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="Cp1251"/>
+    <property name="java.library.path" value="C:\Users\Евгений\.sdkman\candidates\java\17.0.8.1-tem\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Git\cmd;C:\Users\Евгений\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\GnuWin32\bin;;C:\Program Files\JetBrains\IntelliJ IDEA 2023.2.1\bin;;."/>
+    <property name="jdk.debug" value="release"/>
+    <property name="java.class.version" value="61.0"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.0"/>
+    <property name="user.home" value="C:\Users\Евгений"/>
+    <property name="user.timezone" value="Europe/Moscow"/>
+    <property name="idea.launcher.bin.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.2\bin"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="17"/>
+    <property name="user.name" value="Евгений"/>
+    <property name="java.class.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.2\plugins\maven\lib\maven3\boot\plexus-classworlds-2.5.2.jar;C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.2\lib\idea_rt.jar"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="sun.java.command" value="com.intellij.rt.execution.application.AppMainV2 org.codehaus.classworlds.Launcher -Didea.version2019.1.2 install"/>
+    <property name="java.home" value="C:\Users\Евгений\.sdkman\candidates\java\17.0.8.1-tem"/>
+    <property name="user.language" value="ru"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="idea.version2019.1.2" value="true"/>
+    <property name="java.version" value="17.0.8.1"/>
+    <property name="native.encoding" value="Cp1251"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="maven.home" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.2\plugins\maven\lib\maven3"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.version.date" value="2023-08-24"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="java.vendor.version" value="Temurin-17.0.8.1+1"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase classname="UserControllerTest" name="UserControllerTest.testCreateUser" time="0.364">
+    <failure message="Cannot invoke &quot;Object.getClass()&quot; because &quot;bean&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;Object.getClass()&quot; because &quot;bean&quot; is null
+	at org.springframework.test.web.servlet.setup.StubWebApplicationContext.addBeans(StubWebApplicationContext.java:150)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.registerMvcSingletons(StandaloneMockMvcBuilder.java:402)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.initWebAppContext(StandaloneMockMvcBuilder.java:391)
+	at org.springframework.test.web.servlet.setup.AbstractMockMvcBuilder.build(AbstractMockMvcBuilder.java:171)
+	at UserControllerTest.testCreateUser(UserControllerTest.java:34)
+</failure>
+  </testcase>
+  <testcase classname="UserControllerTest" name="UserControllerTest.testGetUserByIdNotFound" time="0.001">
+    <failure message="Cannot invoke &quot;Object.getClass()&quot; because &quot;bean&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;Object.getClass()&quot; because &quot;bean&quot; is null
+	at org.springframework.test.web.servlet.setup.StubWebApplicationContext.addBeans(StubWebApplicationContext.java:150)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.registerMvcSingletons(StandaloneMockMvcBuilder.java:402)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.initWebAppContext(StandaloneMockMvcBuilder.java:391)
+	at org.springframework.test.web.servlet.setup.AbstractMockMvcBuilder.build(AbstractMockMvcBuilder.java:171)
+	at UserControllerTest.testGetUserByIdNotFound(UserControllerTest.java:80)
+</failure>
+  </testcase>
+  <testcase classname="UserControllerTest" name="UserControllerTest.testGetUserByIdFound" time="0.001">
+    <failure message="Cannot invoke &quot;Object.getClass()&quot; because &quot;bean&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;Object.getClass()&quot; because &quot;bean&quot; is null
+	at org.springframework.test.web.servlet.setup.StubWebApplicationContext.addBeans(StubWebApplicationContext.java:150)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.registerMvcSingletons(StandaloneMockMvcBuilder.java:402)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.initWebAppContext(StandaloneMockMvcBuilder.java:391)
+	at org.springframework.test.web.servlet.setup.AbstractMockMvcBuilder.build(AbstractMockMvcBuilder.java:171)
+	at UserControllerTest.testGetUserByIdFound(UserControllerTest.java:59)
+</failure>
+  </testcase>
+</testsuite>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog ">
+
+    <!-- Создание таблицы users -->
+    <changeSet id="1" author="author">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="document_number" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="document_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Вставка данных в таблицу users -->
+        <insert tableName="users">
+            <column name="name" value="John Doe"/>
+            <column name="document_number" value="123456789"/>
+            <column name="document_type" value="PASSPORT"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Jane Smith"/>
+            <column name="document_number" value="987654321"/>
+            <column name="document_type" value="DRIVER_LICENSE"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Alice Johnson"/>
+            <column name="document_number" value="1122334455"/>
+            <column name="document_type" value="PASSPORT"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Bob Brown"/>
+            <column name="document_number" value="5566778899"/>
+            <column name="document_type" value="DRIVER_LICENSE"/>
+        </insert>
+    </changeSet>
+
+    <!-- Создание таблицы account -->
+    <changeSet id="2" author="author">
+        <createTable tableName="account">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="DECIMAL(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Вставка данных в таблицу account -->
+        <insert tableName="account">
+            <column name="user_id" value="1"/>
+            <column name="balance" value="1000.00"/>
+            <column name="currency" value="USD"/>
+        </insert>
+        <insert tableName="account">
+            <column name="user_id" value="2"/>
+            <column name="balance" value="500.00"/>
+            <column name="currency" value="EUR"/>
+        </insert>
+        <insert tableName="account">
+            <column name="user_id" value="3"/>
+            <column name="balance" value="2000.00"/>
+            <column name="currency" value="USD"/>
+        </insert>
+        <insert tableName="account">
+            <column name="user_id" value="4"/>
+            <column name="balance" value="300.00"/>
+            <column name="currency" value="EUR"/>
+        </insert>
+    </changeSet>
+
+    <!-- Создание таблицы transaction -->
+    <changeSet id="3" author="author">
+        <createTable tableName="transaction">
+
+            Mr. Black, [08.09.2024 21:29]
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DECIMAL(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_date" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Вставка данных в таблицу transaction -->
+        <insert tableName="transaction">
+            <column name="account_id" value="1"/>
+            <column name="amount" value="100.00"/>
+            <column name="currency" value="USD"/>
+        </insert>
+        <insert tableName="transaction">
+            <column name="account_id" value="2"/>
+            <column name="amount" value="200.00"/>
+            <column name="currency" value="EUR"/>
+        </insert>
+        <insert tableName="transaction">
+            <column name="account_id" value="3"/>
+            <column name="amount" value="300.00"/>
+            <column name="currency" value="USD"/>
+        </insert>
+        <insert tableName="transaction">
+            <column name="account_id" value="4"/>
+            <column name="amount" value="400.00"/>
+            <column name="currency" value="EUR"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

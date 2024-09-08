@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+Test set: AccountControllerTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 2.236 sec <<< FAILURE!
+AccountControllerTest.testGetAccountByIdFound()  Time elapsed: 0.004 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "com.example.accountservice.service.AccountService.getAccountById(java.lang.Long)" because "this.accountService" is null
+	at AccountControllerTest.testGetAccountByIdFound(AccountControllerTest.java:46)
+
+AccountControllerTest.testGetAccountByIdNotFound()  Time elapsed: 2.212 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "com.example.accountservice.service.AccountService.getAccountById(java.lang.Long)" because "this.accountService" is null
+	at AccountControllerTest.testGetAccountByIdNotFound(AccountControllerTest.java:59)
+
+AccountControllerTest.testDepositSuccess()  Time elapsed: 0.018 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "com.example.accountservice.service.AccountService.deposit(java.lang.Long, java.math.BigDecimal)" because "this.accountService" is null
+	at AccountControllerTest.testDepositSuccess(AccountControllerTest.java:74)
+

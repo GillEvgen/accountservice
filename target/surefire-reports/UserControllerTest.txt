@@ -1,0 +1,28 @@
+-------------------------------------------------------------------------------
+Test set: UserControllerTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.366 sec <<< FAILURE!
+UserControllerTest.testCreateUser()  Time elapsed: 0.364 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "Object.getClass()" because "bean" is null
+	at org.springframework.test.web.servlet.setup.StubWebApplicationContext.addBeans(StubWebApplicationContext.java:150)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.registerMvcSingletons(StandaloneMockMvcBuilder.java:402)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.initWebAppContext(StandaloneMockMvcBuilder.java:391)
+	at org.springframework.test.web.servlet.setup.AbstractMockMvcBuilder.build(AbstractMockMvcBuilder.java:171)
+	at UserControllerTest.testCreateUser(UserControllerTest.java:34)
+
+UserControllerTest.testGetUserByIdNotFound()  Time elapsed: 0.001 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "Object.getClass()" because "bean" is null
+	at org.springframework.test.web.servlet.setup.StubWebApplicationContext.addBeans(StubWebApplicationContext.java:150)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.registerMvcSingletons(StandaloneMockMvcBuilder.java:402)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.initWebAppContext(StandaloneMockMvcBuilder.java:391)
+	at org.springframework.test.web.servlet.setup.AbstractMockMvcBuilder.build(AbstractMockMvcBuilder.java:171)
+	at UserControllerTest.testGetUserByIdNotFound(UserControllerTest.java:80)
+
+UserControllerTest.testGetUserByIdFound()  Time elapsed: 0.001 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "Object.getClass()" because "bean" is null
+	at org.springframework.test.web.servlet.setup.StubWebApplicationContext.addBeans(StubWebApplicationContext.java:150)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.registerMvcSingletons(StandaloneMockMvcBuilder.java:402)
+	at org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder.initWebAppContext(StandaloneMockMvcBuilder.java:391)
+	at org.springframework.test.web.servlet.setup.AbstractMockMvcBuilder.build(AbstractMockMvcBuilder.java:171)
+	at UserControllerTest.testGetUserByIdFound(UserControllerTest.java:59)
+

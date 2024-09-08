@@ -1,0 +1,14 @@
+com\example\accountservice\controller\TransactionController.class
+com\example\accountservice\repository\TransactionRepository.class
+com\example\accountservice\PostgresTestConfig.class
+com\example\accountservice\service\UserService.class
+com\example\accountservice\model\DocumentType.class
+com\example\accountservice\model\User.class
+com\example\accountservice\model\Account.class
+com\example\accountservice\service\AccountService.class
+com\example\accountservice\controller\UserController.class
+com\example\accountservice\repository\AccountRepository.class
+com\example\accountservice\controller\AccountController.class
+com\example\accountservice\service\TransactionService.class
+com\example\accountservice\repository\UserRepository.class
+com\example\accountservice\model\Transaction.class
