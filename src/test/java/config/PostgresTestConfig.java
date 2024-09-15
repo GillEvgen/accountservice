@@ -1,4 +1,4 @@
-package com.example.accountservice;
+package config;
 
 
 import org.springframework.boot.test.context.TestConfiguration;

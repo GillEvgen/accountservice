@@ -7,8 +7,10 @@
 *.iml
 
 ## Directory-based site format:
-.idea/
+idea/
 
+# Игнорируем папку lib
+lib/
 ## File-based site format:
 *.ipr
 *.iws
