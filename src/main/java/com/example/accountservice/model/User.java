@@ -2,7 +2,9 @@ package com.example.accountservice.model;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class User {
@@ -19,7 +21,7 @@ public class User {
     private DocumentType documentType;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -53,12 +55,28 @@ public class User {
         this.documentType = documentType;
     }
 
-    public Set<Account> getAccounts() {
+    public List<Account> getAccounts() {
         return accounts;
     }
 
-    public void setAccounts(Set<Account> accounts) {
+    public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(documentNumber, user.documentNumber) &&
+                documentType == user.documentType &&
+                Objects.equals(accounts, user.accounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, documentNumber, documentType, accounts);
+    }
 }
