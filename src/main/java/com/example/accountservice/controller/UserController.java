@@ -1,6 +1,7 @@
 package com.example.accountservice.controller;
 
 
+import com.example.accountservice.exception.UserNotFoundException;
 import com.example.accountservice.model.User;
 import com.example.accountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,30 +10,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.ok(createdUser);
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
+    // Создание нового пользователя
+    @PostMapping("/create")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User newUser = userService.createUser(user);
+        return ResponseEntity.ok(newUser);
+    }
+
+    // Получение пользователя по ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с  id " + id + " не найден"));
     }
 
+    // Получение пользователя по номеру документа
     @GetMapping("/document/{documentNumber}")
     public ResponseEntity<User> getUserByDocument(@PathVariable String documentNumber) {
         Optional<User> user = userService.getUserByDocument(documentNumber);
         return user.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с номером документа  " + documentNumber + " не найлен"));
     }
 }
