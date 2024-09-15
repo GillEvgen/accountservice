@@ -13,8 +13,8 @@
       <Current>1</Current>
       <Visible>1</Visible>
       <Relations>sequence|table|16608|16609|1
-sequence|table|16569|16570|1
 sequence|table|16596|16597|1
+sequence|table|16569|16570|1
 </Relations>
     </database>
     <role id="3" parent="1" name="pg_checkpoint">
