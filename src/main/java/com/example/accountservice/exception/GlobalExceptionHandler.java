@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<Object> handleAccountNotFoundException(AccountNotFoundException ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("впремя", LocalDateTime.now());
-        body.put("сообщения", ex.getMessage());
+        body.put("впремя, когда произошла ошибка", LocalDateTime.now());
+        body.put("описание ошибки", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
@@ -28,8 +28,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TransactionNotFoundException.class)
     public ResponseEntity<Object> handleTransactionNotFoundException(TransactionNotFoundException ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("время", LocalDateTime.now());
-        body.put("сообщения", ex.getMessage());
+        body.put("впремя, когда произошла ошибка", LocalDateTime.now());
+        body.put("описание ошибки", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("время", LocalDateTime.now());
-        body.put("сообщения", "Не ожиданная ошибка");
-        body.put("ошибка", ex.getMessage());
+        body.put("впремя, когда произошла ошибка", LocalDateTime.now());
+        body.put("описание ошибки", "Не ожиданная ошибка");
+        body.put("доп. сообщения об ошибки", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
