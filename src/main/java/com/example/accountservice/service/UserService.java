@@ -1,5 +1,6 @@
 package com.example.accountservice.service;
 
+import com.example.accountservice.dto.UserDTO;
 import com.example.accountservice.model.User;
 import com.example.accountservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(User user) {
+    public UserDTO createUser(User user) {
         return userRepository.save(user);
     }
 
