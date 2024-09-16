@@ -8,50 +8,32 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Обработка исключений типа AccountNotFoundException
-    @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<Object> handleAccountNotFoundException(AccountNotFoundException ex, WebRequest request) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("впремя, когда произошла ошибка", LocalDateTime.now());
-        body.put("описание ошибки", ex.getMessage());
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  // Обработка всех исключений типа ApiException
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorDTO> handleApiException(ApiException ex, WebRequest request) {
+        ErrorDTO errorDTO = new ErrorDTO(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false),
+                ex.getStatus().value()
+        );
+        return new ResponseEntity<>(errorDTO, ex.getStatus());
     }
 
-    // Обработка исключений типа TransactionNotFoundException
-    @ExceptionHandler(TransactionNotFoundException.class)
-    public ResponseEntity<Object> handleTransactionNotFoundException(TransactionNotFoundException ex, WebRequest request) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("впремя, когда произошла ошибка", LocalDateTime.now());
-        body.put("описание ошибки", ex.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-    }
-
-    // Обработка исключений типа UserNotFoundException
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("впремя, когда произошла ошибка", LocalDateTime.now());
-        body.put("описание ошибки", ex.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-    }
-
-    // Обработка всех остальных необработанных исключений
+    // Обработка всех остальных исключений
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("впремя, когда произошла ошибка", LocalDateTime.now());
-        body.put("описание ошибки", "Не ожиданная ошибка");
-        body.put("доп. сообщения об ошибки", ex.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorDTO> handleGlobalException(Exception ex, WebRequest request) {
+        ErrorDTO errorDTO = new ErrorDTO(
+                LocalDateTime.now(),
+                "An unexpected error occurred",
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value()
+        );
+        return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

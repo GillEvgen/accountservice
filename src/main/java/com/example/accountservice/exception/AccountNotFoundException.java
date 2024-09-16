@@ -1,7 +1,10 @@
 package com.example.accountservice.exception;
 
-public class AccountNotFoundException extends RuntimeException {
-    public AccountNotFoundException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class AccountNotFoundException extends ApiException {
+
+    public AccountNotFoundException(Long accountId) {
+        super("Аккаунт с  ID " + accountId + " не найден", HttpStatus.NOT_FOUND);
     }
 }

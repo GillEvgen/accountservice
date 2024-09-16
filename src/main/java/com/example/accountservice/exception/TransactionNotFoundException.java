@@ -1,7 +1,10 @@
 package com.example.accountservice.exception;
 
-public class TransactionNotFoundException extends RuntimeException {
-    public TransactionNotFoundException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class TransactionNotFoundException extends ApiException {
+
+    public TransactionNotFoundException(String accountId) {
+        super("Для счета с ID транзакций не найдено  " + accountId, HttpStatus.NOT_FOUND);
     }
 }
