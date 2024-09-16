@@ -1,5 +1,7 @@
 package com.example.accountservice.dto;
 
+import com.example.accountservice.model.DocumentType;
+
 import java.util.Objects;
 
 public class UserDTO {
@@ -7,7 +9,7 @@ public class UserDTO {
    private Long id;
     private String name;
     private String documentNumber;
-    private String documentType;
+    private DocumentType documentType;
 
     // Getters и Setters
     public Long getId() {
@@ -34,11 +36,11 @@ public class UserDTO {
         this.documentNumber = documentNumber;
     }
 
-    public String getDocumentType() {
+    public DocumentType getDocumentType() {
         return documentType;
     }
 
-    public void setDocumentType(String documentType) {
+    public void setDocumentType(DocumentType documentType) {
         this.documentType = documentType;
     }
 
