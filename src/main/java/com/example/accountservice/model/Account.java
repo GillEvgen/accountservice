@@ -25,13 +25,13 @@ public class Account extends AccountDTO{
     private User user;
 
     @Column(nullable = false)
-    @NotNull(message = "Balance cannot be null")
-    @PositiveOrZero(message = "Balance must be zero or positive")
+    @NotNull(message = "Баланс не может быть нулевым")
+    @PositiveOrZero(message = "Баланс должен быть нулевым или положительным.")
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Column(length = 3, nullable = false)
-    @NotNull(message = "Currency cannot be null")
-    @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
+    @NotNull(message = "Валюта не может быть нулевой")
+    @Size(min = 3, max = 3, message = "Код валюты должен состоять из 3 символов.")
     private String currency;
 
 

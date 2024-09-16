@@ -21,22 +21,22 @@ public class Transaction extends TransactionDTO {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
-    @NotNull(message = "Account cannot be null")
+    @NotNull(message = "Аккаунт не может быть пустым")
     private Account account;
 
 
     @Column(nullable = false)
-    @NotNull(message = "Amount cannot be null")
-    @Positive(message = "Amount must be positive")
+    @NotNull(message = "Сумма не может быть нулевой")
+    @Positive(message = "Сумма должна быть положительной")
     private BigDecimal amount;
 
     @Column(length = 3, nullable = false)
-    @NotNull(message = "Currency cannot be null")
-    @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
+    @NotNull(message = "Валюта не может быть нулевой")
+    @Size(min = 3, max = 3, message = "Код валюты должен состоять из 3 символов.")
     private String currency;
 
     @Column(nullable = false)
-    @NotNull(message = "Transaction date cannot be null")
+    @NotNull(message = "Дата транзакции не может быть нулевой.")
     private LocalDateTime transactionDate;
 
     public Transaction() {
