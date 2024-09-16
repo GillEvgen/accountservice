@@ -1,26 +1,42 @@
 
 package com.example.accountservice.model;
 
+import com.example.accountservice.dto.TransactionDTO;
 import jakarta.persistence.*;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-public class Transaction {
+@Table(name = "transactions")
+public class Transaction extends TransactionDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
+    @NotNull(message = "Account cannot be null")
     private Account account;
 
+
+    @Column(nullable = false)
+    @NotNull(message = "Amount cannot be null")
+    @Positive(message = "Amount must be positive")
     private BigDecimal amount;
 
+    @Column(length = 3, nullable = false)
+    @NotNull(message = "Currency cannot be null")
+    @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
     private String currency;
 
+    @Column(nullable = false)
+    @NotNull(message = "Transaction date cannot be null")
     private LocalDateTime transactionDate;
 
     public Transaction() {

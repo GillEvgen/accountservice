@@ -1,18 +1,25 @@
 package com.example.accountservice.model;
 
+import com.example.accountservice.dto.UserDTO;
 import jakarta.persistence.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class User {
+@Table(name = "users")
+public class User extends UserDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
+    @NotNull(message = "Name cannot be null")
+    @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
     private String name;
 
     private String documentNumber;

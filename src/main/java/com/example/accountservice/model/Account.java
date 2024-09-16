@@ -1,14 +1,19 @@
 package com.example.accountservice.model;
 
+import com.example.accountservice.dto.AccountDTO;
 import jakarta.persistence.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Account {
+@Table(name = "accounts")
+public class Account extends AccountDTO{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +21,21 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "Пользователь не может быть пустым")
     private User user;
 
-    private BigDecimal balance;
+    @Column(nullable = false)
+    @NotNull(message = "Balance cannot be null")
+    @PositiveOrZero(message = "Balance must be zero or positive")
+    private BigDecimal balance = BigDecimal.ZERO;
 
+    @Column(length = 3, nullable = false)
+    @NotNull(message = "Currency cannot be null")
+    @Size(min = 3, max = 3, message = "Currency code must be 3 characters")
     private String currency;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
 
     public Long getId() {
