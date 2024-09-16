@@ -2,7 +2,6 @@ package com.example.accountservice.controller;
 
 import com.example.accountservice.dto.TransactionDTO;
 import com.example.accountservice.exception.TransactionNotFoundException;
-import com.example.accountservice.model.Transaction;
 import com.example.accountservice.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,8 @@ public class TransactionController {
 
     // Получение транзакций для аккаунта
     @GetMapping("/account/{accountId}")
-    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable Long accountId) {
-        List<Transaction> transactions = transactionService.getTransactionsByAccountId(accountId);
+    public ResponseEntity<List<TransactionDTO>> getTransactionsByAccountId(@PathVariable Long accountId) {
+        List<TransactionDTO> transactions = transactionService.getTransactionsByAccountId(accountId);
         if (transactions.isEmpty()) {
             throw new TransactionNotFoundException("Для счета с ID транзакций не найдено " + accountId);
         }

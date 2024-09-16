@@ -26,23 +26,23 @@ public class AccountController {
 
     // Получение информации об аккаунте по ID
     @GetMapping("/{accountId}")
-    public ResponseEntity<Account> getAccountById(@PathVariable Long accountId) throws AccountNotFoundException {
-        Optional<Account> accountDto = accountService.getAccountById(accountId);
+    public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long accountId) throws AccountNotFoundException {
+        Optional<AccountDTO> accountDto = accountService.getAccountById(accountId);
         return accountDto.map(ResponseEntity::ok)
                 .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
     }
 
     // Пополнение баланса аккаунта
     @PostMapping("/{accountId}/deposit")
-    public ResponseEntity<Account> deposit(@PathVariable Long accountId, @RequestParam BigDecimal amount) throws AccountNotFoundException {
-        Account updatedAccount = accountService.deposit(accountId, amount);
+    public ResponseEntity<AccountDTO> deposit(@PathVariable Long accountId, @RequestParam BigDecimal amount) throws AccountNotFoundException {
+        AccountDTO updatedAccount = accountService.deposit(accountId, amount);
         return ResponseEntity.ok(updatedAccount);
     }
 
     // Создание нового аккаунта
     @PostMapping("/create")
     public ResponseEntity<Account> createAccount(@Valid @RequestBody AccountDTO accountDTO) {
-        Account newAccount = accountService.createAccount(accountDTO.getUserId(), accountDTO.getCurrency());
+        Account newAccount = (Account) accountService.createAccount(accountDTO.getUserId(), accountDTO.getCurrency());
         return ResponseEntity.ok(newAccount);
     }
 }
