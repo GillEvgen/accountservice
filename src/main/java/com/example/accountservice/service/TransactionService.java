@@ -1,6 +1,6 @@
 package com.example.accountservice.service;
 
-import com.example.accountservice.dto.TransactionDTO;
+import com.example.accountservice.dto.TransactionDto;
 import com.example.accountservice.model.Account;
 import com.example.accountservice.model.Transaction;
 import com.example.accountservice.repository.TransactionRepository;
@@ -27,8 +27,8 @@ public class TransactionService {
     }
 
     // Маппинг сущности в DTO
-    private TransactionDTO convertToDto(Transaction transaction) {
-        TransactionDTO dto = new TransactionDTO();
+    private TransactionDto convertToDto(Transaction transaction) {
+        TransactionDto dto = new TransactionDto();
         dto.setId(transaction.getId());
         dto.setAmount(transaction.getAmount());
         dto.setCurrency(transaction.getCurrency());
@@ -38,7 +38,7 @@ public class TransactionService {
     }
 
     // Маппинг DTO в сущность
-    private Transaction convertToEntity(TransactionDTO transactionDTO, Account account) {
+    private Transaction convertToEntity(TransactionDto transactionDTO, Account account) {
         Transaction transaction = new Transaction();
         transaction.setAmount(transactionDTO.getAmount());
         transaction.setCurrency(transactionDTO.getCurrency());
@@ -48,7 +48,7 @@ public class TransactionService {
     }
 
     // Получение транзакций для аккаунта
-    public List<TransactionDTO> getTransactionsByAccountId(Long accountId) {
+    public List<TransactionDto> getTransactionsByAccountId(Long accountId) {
         return transactionRepository.findByAccountId(accountId)
                 .stream()
                 .map(this::convertToDto) // Преобразуем сущности в DTO
@@ -56,7 +56,7 @@ public class TransactionService {
     }
 
     // Создание новой транзакции
-    public TransactionDTO createTransaction(Long accountId, BigDecimal amount, String currency) throws AccountNotFoundException {
+    public TransactionDto createTransaction(Long accountId, BigDecimal amount, String currency) throws AccountNotFoundException {
         Account account = (Account) accountService.getAccountById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Аккаунт с  id " + accountId + " не найлен"));
 

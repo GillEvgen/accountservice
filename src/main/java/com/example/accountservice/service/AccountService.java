@@ -1,6 +1,6 @@
 package com.example.accountservice.service;
 
-import com.example.accountservice.dto.AccountDTO;
+import com.example.accountservice.dto.AccountDto;
 import com.example.accountservice.exception.UserNotFoundException;
 import com.example.accountservice.model.Account;
 import com.example.accountservice.model.User;
@@ -26,8 +26,8 @@ public class AccountService {
     }
 
     // Маппинг сущности в DTO
-    private AccountDTO convertToDto(Account account) {
-        AccountDTO dto = new AccountDTO();
+    private AccountDto convertToDto(Account account) {
+        AccountDto dto = new AccountDto();
         dto.setId(account.getId());
         dto.setBalance(account.getBalance());
         dto.setCurrency(account.getCurrency());
@@ -36,7 +36,7 @@ public class AccountService {
     }
 
     // Маппинг DTO в сущность
-    private Account convertToEntity(AccountDTO accountDTO, User user) {
+    private Account convertToEntity(AccountDto accountDTO, User user) {
         Account account = new Account();
         account.setBalance(accountDTO.getBalance());
         account.setCurrency(accountDTO.getCurrency());
@@ -45,13 +45,13 @@ public class AccountService {
     }
 
     // Получение аккаунта по ID
-    public Optional<AccountDTO> getAccountById(Long accountId) {
+    public Optional<AccountDto> getAccountById(Long accountId) {
         return accountRepository.findById(accountId)
                 .map(this::convertToDto); // Преобразуем сущность в DTO
     }
 
     // Пополнение баланса аккаунта
-    public AccountDTO deposit(Long accountId, BigDecimal amount) throws AccountNotFoundException {
+    public AccountDto deposit(Long accountId, BigDecimal amount) throws AccountNotFoundException {
         Account account = accountRepository.findByIdForUpdate(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Аккаунт с  " + accountId + " не найдке"));
 
@@ -61,7 +61,7 @@ public class AccountService {
     }
 
     // Создание нового аккаунта
-    public AccountDTO createAccount(Long userId, String currency) {
+    public AccountDto createAccount(Long userId, String currency) {
         User user = userService.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с id " + userId + " не найдкен"));
 
