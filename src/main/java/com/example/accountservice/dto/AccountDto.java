@@ -3,7 +3,7 @@ package com.example.accountservice.dto;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class AccountDTO {
+public class AccountDto {
 
     private Long id;
     private BigDecimal balance;
@@ -47,7 +47,7 @@ public class AccountDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AccountDTO that = (AccountDTO) o;
+        AccountDto that = (AccountDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(balance, that.balance) &&
                 Objects.equals(currency, that.currency) &&

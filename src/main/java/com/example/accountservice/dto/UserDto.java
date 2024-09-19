@@ -4,7 +4,7 @@ import com.example.accountservice.model.DocumentType;
 
 import java.util.Objects;
 
-public class UserDTO {
+public class UserDto {
 
    private Long id;
     private String name;
@@ -48,7 +48,7 @@ public class UserDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDTO userDTO = (UserDTO) o;
+        UserDto userDTO = (UserDto) o;
         return Objects.equals(id, userDTO.id) &&
                 Objects.equals(name, userDTO.name) &&
                 Objects.equals(documentNumber, userDTO.documentNumber) &&

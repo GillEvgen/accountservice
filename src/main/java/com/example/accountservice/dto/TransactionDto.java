@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class TransactionDTO {
+public class TransactionDto {
 
     private Long id;
     private BigDecimal amount;
@@ -57,7 +57,7 @@ public class TransactionDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TransactionDTO that = (TransactionDTO) o;
+        TransactionDto that = (TransactionDto) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(amount, that.amount) &&
                 Objects.equals(currency, that.currency) &&
