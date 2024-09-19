@@ -1,10 +1,8 @@
 package com.example.accountservice.controller;
 
-import com.example.accountservice.dto.TransactionDTO;
-import com.example.accountservice.exception.TransactionNotFoundException;
+import com.example.accountservice.dto.TransactionDto;
 import com.example.accountservice.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -24,24 +22,17 @@ public class TransactionController {
 
     // Получение транзакций для аккаунта
     @GetMapping("/account/{accountId}")
-    public ResponseEntity<List<TransactionDTO>> getTransactionsByAccountId(@PathVariable Long accountId) {
-        List<TransactionDTO> transactions = transactionService.getTransactionsByAccountId(accountId);
-        if (transactions.isEmpty()) {
-            throw new TransactionNotFoundException("Для счета с ID транзакций не найдено " + accountId);
-        }
-        return ResponseEntity.ok(transactions);
+    public List<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId) {
+        return transactionService.getTransactionsByAccountId(accountId);
     }
 
     // Создание новой транзакции
     @PostMapping("/create")
-    public ResponseEntity<TransactionDTO> createTransaction(
-            @Valid @RequestBody TransactionDTO transactionDTO) throws AccountNotFoundException {
-
-        TransactionDTO newTransaction = transactionService.createTransaction(
+    public TransactionDto createTransaction(@Valid @RequestBody TransactionDto transactionDTO) throws AccountNotFoundException {
+        return transactionService.createTransaction(
                 transactionDTO.getAccountId(),
                 transactionDTO.getAmount(),
                 transactionDTO.getCurrency()
         );
-        return ResponseEntity.ok(newTransaction);
     }
 }

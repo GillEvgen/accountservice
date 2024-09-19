@@ -1,21 +1,18 @@
 package com.example.accountservice.controller;
 
 
-import com.example.accountservice.dto.UserDTO;
+import com.example.accountservice.dto.UserDto;
 import com.example.accountservice.exception.UserNotFoundException;
-import com.example.accountservice.model.User;
 import com.example.accountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import javax.validation.Valid;
 
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-
 
     private final UserService userService;
 
@@ -26,24 +23,21 @@ public class UserController {
 
     // Получение пользователя по ID
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        Optional<User> userDto = userService.getUserById(userId);
-        return userDto.map(ResponseEntity::ok)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+    public UserDto getUserById(@PathVariable Long userId) throws UserNotFoundException {
+        return userService.getUserById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с  id " + userId + " не найден"));
     }
 
     // Получение пользователя по номеру документа
     @GetMapping("/document/{documentNumber}")
-    public ResponseEntity<User> getUserByDocument(@PathVariable String documentNumber) {
-        Optional<User> userDto = userService.getUserByDocument(documentNumber);
-        return userDto.map(ResponseEntity::ok)
-                .orElseThrow(() -> new UserNotFoundException("User with document number " + documentNumber + " not found"));
+    public UserDto getUserByDocument(@PathVariable String documentNumber) throws UserNotFoundException {
+        return userService.getUserByDocument(documentNumber)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с таким номером документа " + documentNumber + " не найден"));
     }
 
     // Создание нового пользователя
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody User userDTO) {
-        UserDTO newUser = userService.createUser(userDTO);
-        return ResponseEntity.ok(newUser);
+    public UserDto createUser(@Valid @RequestBody UserDto userDTO) {
+        return userService.createUser(userDTO);
     }
 }
