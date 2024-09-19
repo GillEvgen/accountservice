@@ -18,7 +18,6 @@ public class User extends UserDto {
     private Long id;
 
     @Column(nullable = false, length = 100)
-    @NotNull(message = "Имя не может быть пустым")
     @Size(min = 1, max = 100, message = "Имя должно содержать от 1 до 100 символов.")
     private String name;
 

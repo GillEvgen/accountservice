@@ -26,7 +26,6 @@ public class Transaction extends TransactionDto {
 
 
     @Column(nullable = false)
-    @NotNull(message = "Сумма не может быть нулевой")
     @Positive(message = "Сумма должна быть положительной")
     private BigDecimal amount;
 

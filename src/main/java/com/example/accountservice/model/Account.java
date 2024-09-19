@@ -21,7 +21,6 @@ public class Account extends AccountDto {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @NotNull(message = "Пользователь не может быть пустым")
     private User user;
 
     @Column(nullable = false)
