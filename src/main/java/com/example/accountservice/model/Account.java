@@ -4,7 +4,6 @@ import com.example.accountservice.dto.AccountDto;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ public class Account extends AccountDto {
 
     @Column(nullable = false)
     @NotNull(message = "Баланс не может быть нулевым")
-    @PositiveOrZero(message = "Баланс должен быть нулевым или положительным.")
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Column(length = 3, nullable = false)
