@@ -1,6 +1,6 @@
 package com.example.accountservice.model;
 
-import com.example.accountservice.dto.AccountDTO;
+import com.example.accountservice.dto.AccountDto;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "accounts")
-public class Account extends AccountDTO{
+public class Account extends AccountDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
