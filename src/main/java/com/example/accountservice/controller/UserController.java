@@ -50,4 +50,17 @@ public class UserController {
     public UserDto createUser(@Valid @RequestBody UserDto userDTO) {
         return userService.createUser(userDTO);
     }
+
+    // Обновление данных пользователя
+    @PutMapping("/{userId}")
+    public UserDto updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
+        return userService.updateUser(userId, userDto);
+    }
+
+    // Удаление пользователя
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+    }
 }

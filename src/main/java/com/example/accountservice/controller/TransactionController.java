@@ -44,4 +44,11 @@ public class TransactionController {
                 transactionDTO.getCurrency()
         );
     }
+
+    // Удаление транзакции
+    @DeleteMapping("/{transactionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTransaction(@PathVariable Long transactionId) {
+        transactionService.deleteTransaction(transactionId);
+    }
 }
