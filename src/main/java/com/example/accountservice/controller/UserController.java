@@ -5,6 +5,7 @@ import com.example.accountservice.dto.UserDto;
 import com.example.accountservice.exception.UserNotFoundException;
 import com.example.accountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,7 +37,8 @@ public class UserController {
     }
 
     // Создание нового пользователя
-    @PostMapping("/create")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDTO) {
         return userService.createUser(userDTO);
     }

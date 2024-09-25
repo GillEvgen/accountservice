@@ -3,6 +3,7 @@ package com.example.accountservice.controller;
 import com.example.accountservice.dto.AccountDto;
 import com.example.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -28,13 +29,14 @@ public class AccountController {
     }
 
     // Пополнение баланса аккаунта
-    @PostMapping("/{accountId}/deposit")
+    @PutMapping("/{accountId}/deposit")
     public AccountDto deposit(@PathVariable Long accountId, @RequestParam BigDecimal amount) throws AccountNotFoundException {
         return accountService.deposit(accountId, amount);
     }
 
     // Создание нового аккаунта
-    @PostMapping("/create")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AccountDto createAccount(@Valid @RequestBody AccountDto accountDTO) {
         return accountService.createAccount(accountDTO.getUserId(), accountDTO.getCurrency());
     }
