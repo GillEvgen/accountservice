@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
-
-
+    
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;
 
@@ -35,16 +34,6 @@ public class TransactionService {
         dto.setTransactionDate(transaction.getTransactionDate());
         dto.setAccountId(transaction.getAccount().getId());
         return dto;
-    }
-
-    // Маппинг DTO в сущность
-    private Transaction convertToEntity(TransactionDto transactionDTO, Account account) {
-        Transaction transaction = new Transaction();
-        transaction.setAmount(transactionDTO.getAmount());
-        transaction.setCurrency(transactionDTO.getCurrency());
-        transaction.setTransactionDate(LocalDateTime.now());
-        transaction.setAccount(account);
-        return transaction;
     }
 
     // Получение транзакций для аккаунта
