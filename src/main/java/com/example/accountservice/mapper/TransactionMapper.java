@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 public class TransactionMapper {
 
     // Преобразование Transaction в TransactionDTO
-    public TransactionDTO toDto(Transaction transaction) {
-        TransactionDTO dto = new TransactionDTO();
+    public TransactionDto toDto(Transaction transaction) {
+        TransactionDto dto = new TransactionDto();
         dto.setId(transaction.getId());
         dto.setAccountId(transaction.getAccount().getId());
         dto.setAmount(transaction.getAmount());
@@ -20,7 +20,7 @@ public class TransactionMapper {
     }
 
     // Преобразование TransactionDTO в Transaction
-    public Transaction toEntity(TransactionDTO dto, Account account) {
+    public Transaction toEntity(TransactionDto dto, Account account) {
         Transaction transaction = new Transaction();
         transaction.setAccount(account);
         transaction.setAmount(dto.getAmount());

@@ -1,8 +1,11 @@
 package com.example.accountservice.service;
 
 import com.example.accountservice.dto.UserDto;
+import com.example.accountservice.exception.UserNotFoundException;
+import com.example.accountservice.mapper.UserMapper;
 import com.example.accountservice.model.User;
 import com.example.accountservice.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,41 +15,55 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    // Инъекция через конструктор
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
+    // Получение пользователя по ID
+    public Optional<UserDto> getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .map(userMapper::toDto); // Преобразуем сущность User в DTO
+    }
+
+    // Получение пользователя по номеру документа
+    public Optional<UserDto> getUserByDocument(String documentNumber) {
+        return userRepository.findByDocumentNumber(documentNumber)
+                .map(userMapper::toDto); // Преобразуем сущность User в DTO
+    }
+
+    // Создание нового пользователя
+    @Transactional
     public UserDto createUser(UserDto userDTO) {
-        User user = convertToEntity(userDTO);
-        User savedUser = userRepository.save(user);
-        return convertToDto(savedUser);
+        User user = userMapper.toEntity(userDTO); // Преобразуем DTO в сущность User
+        User savedUser = userRepository.save(user); // Сохраняем нового пользователя в базе
+        return userMapper.toDto(savedUser); // Преобразуем сохраненную сущность обратно в DTO и возвращаем
     }
 
-    private User convertToEntity(UserDto userDTO) {
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setDocumentNumber(userDTO.getDocumentNumber());
-        user.setDocumentType(userDTO.getDocumentType());
-        return user;
+    // Обновление пользователя
+    @Transactional
+    public UserDto updateUser(Long userId, UserDto userDTO) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+
+        // Обновляем поля пользователя
+        existingUser.setName(userDTO.getName());
+        existingUser.setDocumentNumber(userDTO.getDocumentNumber());
+        existingUser.setDocumentType(userDTO.getDocumentType());
+
+        User updatedUser = userRepository.save(existingUser); // Сохраняем изменения
+        return userMapper.toDto(updatedUser); // Преобразуем в DTO и возвращаем
     }
 
-    private UserDto convertToDto(User user) {
-        UserDto dto = new UserDto();
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setDocumentNumber(user.getDocumentNumber());
-        dto.setDocumentType(user.getDocumentType());
-        return dto;
-    }
+    // Удаление пользователя
+    @Transactional
+    public void deleteUser(Long userId) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public Optional<User> getUserByDocument(String documentNumber) {
-        return userRepository.findByDocumentNumber(documentNumber);
+        userRepository.delete(existingUser); // Удаляем пользователя
     }
 }

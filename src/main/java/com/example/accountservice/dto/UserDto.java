@@ -2,13 +2,25 @@ package com.example.accountservice.dto;
 
 import com.example.accountservice.model.DocumentType;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class UserDto {
 
    private Long id;
+
+    @NotNull(message = "Name cannot be null")
+    @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
     private String name;
+
+    @NotNull(message = "Document number cannot be null")
+    @Size(min = 5, max = 50, message = "Document number must be between 5 and 50 characters")
     private String documentNumber;
+
+    @NotNull(message = "Document type cannot be null")
+    @Pattern(regexp = "PASSPORT|DRIVER_LICENSE", message = "Document type must be either 'PASSPORT' or 'DRIVER_LICENSE'")
     private DocumentType documentType;
 
     // Getters и Setters

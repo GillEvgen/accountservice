@@ -1,6 +1,7 @@
 package com.example.accountservice.mapper;
 
 
+import com.example.accountservice.dto.UserDto;
 import com.example.accountservice.model.User;
 import org.springframework.stereotype.Component;
 
@@ -8,8 +9,8 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     // Преобразование User в UserDTO
-    public UserDTO toDto(User user) {
-        UserDTO dto = new UserDTO();
+    public UserDto toDto(User user) {
+        UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setDocumentNumber(user.getDocumentNumber());
@@ -18,7 +19,7 @@ public class UserMapper {
     }
 
     // Преобразование UserDTO в User
-    public User toEntity(UserDTO dto) {
+    public User toEntity(UserDto dto) {
         User user = new User();
         user.setName(dto.getName());
         user.setDocumentNumber(dto.getDocumentNumber());
