@@ -3,12 +3,13 @@ package com.example.accountservice.controller;
 import com.example.accountservice.dto.TransactionDto;
 import com.example.accountservice.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
-import java.util.List;
+import java.awt.print.Pageable;
 
 @RestController
 @RequestMapping("/api/accounts/{accountId}/transactions")
@@ -21,10 +22,16 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    // Получение транзакций для аккаунта
-    @GetMapping("/account/{accountId}")
-    public List<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId) {
-        return transactionService.getTransactionsByAccountId(accountId);
+//    // Получение транзакций для аккаунта
+//    @GetMapping("/account/{accountId}")
+//    public List<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId) {
+//        return transactionService.getTransactionsByAccountId(accountId);
+//    }
+
+    // Получение всех транзакций по ID аккаунта с пагинацией
+    @GetMapping
+    public Page<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId, Pageable pageable) {
+        return transactionService.getTransactionsByAccountId(accountId, pageable);
     }
 
     // Создание новой транзакции

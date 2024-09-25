@@ -8,13 +8,13 @@ import com.example.accountservice.model.Transaction;
 import com.example.accountservice.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-
 
 @Service
 public class TransactionService {
@@ -30,12 +30,18 @@ public class TransactionService {
         this.transactionMapper = transactionMapper;
     }
 
-    // Получение транзакций для аккаунта
-    public List<TransactionDto> getTransactionsByAccountId(Long accountId) {
-        return transactionRepository.findByAccountId(accountId)
-                .stream()
-                .map(transactionMapper::toDto)  // Преобразование сущности в DTO
-                .toList();
+//    // Получение транзакций для аккаунта
+//    public List<TransactionDto> getTransactionsByAccountId(Long accountId) {
+//        return transactionRepository.findByAccountId(accountId)
+//                .stream()
+//                .map(transactionMapper::toDto)  // Преобразование сущности в DTO
+//                .toList();
+//    }
+
+    // Получение транзакций для аккаунта с использованием пагинации
+    public Page<TransactionDto> getTransactionsByAccountId(Long accountId, Pageable pageable) {
+        return transactionRepository.findByAccountId(accountId, pageable)
+                .map(transactionMapper::toDto);  // Преобразование в DTO с помощью маппера
     }
 
     // Создание новой транзакции

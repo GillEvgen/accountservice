@@ -3,11 +3,13 @@ package com.example.accountservice.controller;
 import com.example.accountservice.dto.AccountDto;
 import com.example.accountservice.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
 
 @RestController
@@ -19,6 +21,12 @@ public class AccountController {
     @Autowired
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
+    }
+
+    // Получение всех аккаунтов с пагинацией
+    @GetMapping
+    public Page<AccountDto> getAllAccounts(Pageable pageable) {
+        return accountService.getAllAccounts(pageable);
     }
 
     // Получение информации об аккаунте по ID

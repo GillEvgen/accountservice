@@ -5,10 +5,12 @@ import com.example.accountservice.dto.UserDto;
 import com.example.accountservice.exception.UserNotFoundException;
 import com.example.accountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 
 
 @RestController
@@ -20,6 +22,12 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    // Получение всех пользователей с пагинацией
+    @GetMapping
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+        return userService.getAllUsers(pageable);
     }
 
     // Получение пользователя по ID

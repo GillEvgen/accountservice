@@ -7,8 +7,10 @@ import com.example.accountservice.model.User;
 import com.example.accountservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,12 @@ public class UserService {
     public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+    }
+
+    // Получение всех пользователей с пагинацией
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(userMapper::toDto);  // Преобразование в DTO с помощью маппера
     }
 
     // Получение пользователя по ID

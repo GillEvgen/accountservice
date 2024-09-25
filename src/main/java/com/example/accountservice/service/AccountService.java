@@ -8,9 +8,11 @@ import com.example.accountservice.model.User;
 import com.example.accountservice.repository.AccountRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -26,6 +28,12 @@ public class AccountService {
         this.accountRepository = accountRepository;
         this.userService = userService;
         this.accountMapper = accountMapper;
+    }
+
+    // Получение всех аккаунтов с пагинацией
+    public Page<AccountDto> getAllAccounts(Pageable pageable) {
+        return accountRepository.findAll(pageable)
+                .map(accountMapper::toDto);  // Преобразование в DTO с помощью маппера
     }
 
     // Получение аккаунта по ID
