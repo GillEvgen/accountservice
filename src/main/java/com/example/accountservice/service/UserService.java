@@ -5,12 +5,12 @@ import com.example.accountservice.exception.UserNotFoundException;
 import com.example.accountservice.mapper.UserMapper;
 import com.example.accountservice.model.User;
 import com.example.accountservice.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.Optional;
 
 @Service
@@ -25,53 +25,42 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    // Получение всех пользователей с пагинацией
-    public Page<UserDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable)
-                .map(userMapper::toDto);  // Преобразование в DTO с помощью маппера
-    }
-
     // Получение пользователя по ID
+    @Transactional(readOnly = true)
     public Optional<UserDto> getUserById(Long userId) {
         return userRepository.findById(userId)
-                .map(userMapper::toDto); // Преобразуем сущность User в DTO
+                .map(userMapper::toDto);  // Преобразуем сущность в Dto
     }
 
-    // Получение пользователя по номеру документа
+    // Получение пользователя по документу
+    @Transactional(readOnly = true)
     public Optional<UserDto> getUserByDocument(String documentNumber) {
         return userRepository.findByDocumentNumber(documentNumber)
-                .map(userMapper::toDto); // Преобразуем сущность User в DTO
+                .map(userMapper::toDto);  // Преобразуем сущность в Dto
+    }
+
+    // Получение всех пользователей с пагинацией
+    @Transactional(readOnly = true)
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(userMapper::toDto);  // Преобразуем сущности в Dto
     }
 
     // Создание нового пользователя
     @Transactional
-    public UserDto createUser(UserDto userDTO) {
-        User user = userMapper.toEntity(userDTO); // Преобразуем DTO в сущность User
-        User savedUser = userRepository.save(user); // Сохраняем нового пользователя в базе
-        return userMapper.toDto(savedUser); // Преобразуем сохраненную сущность обратно в DTO и возвращаем
-    }
+    public UserDto createUser(UserDto userDto) {
+        User user = userMapper.toEntity(userDto);  // Преобразуем Dto в сущность
+        User savedUser = userRepository.save(user);  // Сохраняем пользователя
 
-    // Обновление пользователя
-    @Transactional
-    public UserDto updateUser(Long userId, UserDto userDTO) {
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
-
-        // Обновляем поля пользователя
-        existingUser.setName(userDTO.getName());
-        existingUser.setDocumentNumber(userDTO.getDocumentNumber());
-        existingUser.setDocumentType(userDTO.getDocumentType());
-
-        User updatedUser = userRepository.save(existingUser); // Сохраняем изменения
-        return userMapper.toDto(updatedUser); // Преобразуем в DTO и возвращаем
+        return userMapper.toDto(savedUser);  // Преобразуем обратно в Dto
     }
 
     // Удаление пользователя
     @Transactional
     public void deleteUser(Long userId) {
-        User existingUser = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
 
-        userRepository.delete(existingUser); // Удаляем пользователя
+        userRepository.delete(user);
     }
 }

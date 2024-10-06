@@ -10,7 +10,7 @@ public class UserMapper {
 
     // Преобразование User в UserDTO
     public UserDto toDto(User user) {
-        UserDto dto = new UserDto();
+        UserDto dto = new UserDto(null, "User 1", "doc1");
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setDocumentNumber(user.getDocumentNumber());

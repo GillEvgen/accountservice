@@ -6,12 +6,11 @@ import com.example.accountservice.exception.UserNotFoundException;
 import com.example.accountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.awt.print.Pageable;
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -34,14 +33,14 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserDto getUserById(@PathVariable Long userId) throws UserNotFoundException {
         return userService.getUserById(userId)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с  id " + userId + " не найден"));
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     // Получение пользователя по номеру документа
     @GetMapping("/document/{documentNumber}")
     public UserDto getUserByDocument(@PathVariable String documentNumber) throws UserNotFoundException {
         return userService.getUserByDocument(documentNumber)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с таким номером документа " + documentNumber + " не найден"));
+                .orElseThrow(() -> new UserNotFoundException(documentNumber));
     }
 
     // Создание нового пользователя
@@ -51,11 +50,11 @@ public class UserController {
         return userService.createUser(userDTO);
     }
 
-    // Обновление данных пользователя
-    @PutMapping("/{userId}")
-    public UserDto updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
-        return userService.updateUser(userId, userDto);
-    }
+//    // Обновление данных пользователя
+//    @PutMapping("/{userId}")
+//    public UserDto updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
+//        return userService.updateUser(userId, userDto);
+//    }
 
     // Удаление пользователя
     @DeleteMapping("/{userId}")

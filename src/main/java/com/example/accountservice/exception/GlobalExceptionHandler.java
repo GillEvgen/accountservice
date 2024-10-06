@@ -12,10 +12,9 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
   // Обработка всех исключений типа ApiException
-    @ExceptionHandler(ApiException.class)
-    public ResponseEntity<ErrorDTO> handleApiException(ApiException ex, WebRequest request) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleApiException(UserNotFoundException ex, WebRequest request) {
         ErrorDTO errorDTO = new ErrorDTO(
                 LocalDateTime.now(),
                 ex.getMessage(),

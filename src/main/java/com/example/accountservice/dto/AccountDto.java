@@ -22,6 +22,18 @@ public class AccountDto {
     @Positive(message = "Баланс должен быть отрицатиельным")
     private BigDecimal balance;
 
+    public AccountDto(@NotNull(message = "ID не может быть null") Long id, @NotNull(message = "User ID не может быть null") Long userId, @NotNull(message = "Валюта не может быть нулевой") @Size(min = 3, max = 3, message = "Код валюты должен состоять из 3 символов.") String currency, @NotNull(message = "Баланс не может быть нулевым")
+    @Positive(message = "Баланс должен быть отрицатиельным") BigDecimal balance) {
+        this.id = id;
+        this.userId = userId;
+        this.currency = currency;
+        this.balance = balance;
+    }
+
+    public AccountDto() {
+
+    }
+
     // Getters и Setters
     public Long getId() {
         return id;

@@ -2,50 +2,44 @@ package com.example.accountservice.controller;
 
 import com.example.accountservice.dto.AccountDto;
 import com.example.accountservice.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
-import javax.validation.Valid;
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    private final AccountService accountService;
+private final AccountService accountService;
 
-    @Autowired
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    // Получение всех аккаунтов с пагинацией
-    @GetMapping
-    public Page<AccountDto> getAllAccounts(Pageable pageable) {
-        return accountService.getAllAccounts(pageable);
+    @GetMapping("/{id}")
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable("id") Long id) throws AccountNotFoundException {
+        AccountDto account = accountService.getAccountById(id);
+        return ResponseEntity.ok(account);
     }
 
-    // Получение информации об аккаунте по ID
-    @GetMapping("/{accountId}")
-    public AccountDto getAccountById(@PathVariable Long accountId) throws AccountNotFoundException {
-        return accountService.getAccountById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Аккаунт с id " + accountId + " not found"));
-    }
-
-    // Пополнение баланса аккаунта
-    @PutMapping("/{accountId}/deposit")
-    public AccountDto deposit(@PathVariable Long accountId, @RequestParam BigDecimal amount) throws AccountNotFoundException {
-        return accountService.deposit(accountId, amount);
-    }
-
-    // Создание нового аккаунта
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createAccount(@Valid @RequestBody AccountDto accountDTO) {
-        return accountService.createAccount(accountDTO.getUserId(), accountDTO.getCurrency());
+    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
+        return accountService.createAccount(accountDto);
     }
+
+    @PutMapping("/{id}/deposit")
+    public AccountDto deposit(@PathVariable("id") Long id, @RequestParam BigDecimal amount) throws AccountNotFoundException {
+        return accountService.deposit(id, amount);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAccount(@PathVariable("id") Long id) throws AccountNotFoundException {
+        accountService.deleteAccount(id);
+    }
+
 }

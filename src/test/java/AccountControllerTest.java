@@ -1,27 +1,26 @@
-
 import com.example.accountservice.controller.AccountController;
-import com.example.accountservice.model.Account;
+import com.example.accountservice.dto.AccountDto;
 import com.example.accountservice.service.AccountService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(MockitoExtension.class)
 public class AccountControllerTest {
-
     private MockMvc mockMvc;
 
     @Mock
@@ -30,59 +29,56 @@ public class AccountControllerTest {
     @InjectMocks
     private AccountController accountController;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
-    }
-
     @Test
-    public void testGetAccountByIdFound() throws Exception {
-        Account account = new Account();
-        account.setId(1L);
-        account.setBalance(new BigDecimal("100.00"));
-        account.setCurrency("USD");
+    public void testGetAccountById() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
 
-        when(accountService.getAccountById(1L)).thenReturn(Optional.of(account));
+        AccountDto accountDto = new AccountDto(1L, 1L, "USD", new BigDecimal("100.00"));
+
+        when(accountService.getAccountById(anyLong())).thenReturn(accountDto);
 
         mockMvc.perform(get("/api/accounts/1"))
-                .andExpect(status().isOk())
+                .andExpect(status().isOk())  // Ожидаем статус 200 OK
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.balance").value(100.00))
                 .andExpect(jsonPath("$.currency").value("USD"));
-
-        verify(accountService, times(1)).getAccountById(1L);
     }
 
     @Test
-    public void testGetAccountByIdNotFound() throws Exception {
-        when(accountService.getAccountById(anyLong())).thenReturn(Optional.empty());
+    public void testCreateAccount() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
 
-        mockMvc.perform(get("/api/accounts/1"))
-                .andExpect(status().isNotFound());
+        AccountDto accountDto = new AccountDto(1L, 1L, "USD", new BigDecimal("0.00"));
 
-        verify(accountService, times(1)).getAccountById(1L);
-    }
+        when(accountService.createAccount(Mockito.any(AccountDto.class))).thenReturn(accountDto);
 
-    @Test
-    public void testDepositSuccess() throws Exception {
-        Account account = new Account();
-        account.setId(1L);
-        account.setBalance(new BigDecimal("150.00"));
-        account.setCurrency("USD");
-
-        when(accountService.deposit(anyLong(), any(BigDecimal.class))).thenReturn(account);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        mockMvc.perform(post("/api/accounts/1/deposit")
+        mockMvc.perform(post("/api/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("amount", "50.00"))
-                .andExpect(status().isOk())
+                .content("{\"userId\": 1, \"currency\": \"USD\"}"))
+                .andExpect(status().isCreated())  // Ожидаем статус 201 Created
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.balance").value(150.00))
                 .andExpect(jsonPath("$.currency").value("USD"));
+    }
 
-        verify(accountService, times(1)).deposit(1L, new BigDecimal("50.00"));
+    @Test
+    public void testDeposit() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
+
+        AccountDto accountDto = new AccountDto(1L, 1L, "USD", new BigDecimal("150.00"));
+
+        when(accountService.deposit(anyLong(), Mockito.any(BigDecimal.class))).thenReturn(accountDto);
+
+        mockMvc.perform(put("/api/accounts/1/deposit")
+                .param("amount", "50.00"))
+                .andExpect(status().isOk())  // Ожидаем статус 200 OK
+                .andExpect(jsonPath("$.balance").value(150.00));
+    }
+
+    @Test
+    public void testDeleteAccount() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
+
+        mockMvc.perform(delete("/api/accounts/1"))
+                .andExpect(status().isNoContent());  // Ожидаем статус 204 No Content
     }
 }

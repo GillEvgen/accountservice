@@ -6,15 +6,15 @@ import com.example.accountservice.mapper.AccountMapper;
 import com.example.accountservice.model.Account;
 import com.example.accountservice.model.User;
 import com.example.accountservice.repository.AccountRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
-import java.util.Optional;
+
 
 @Service
 public class AccountService {
@@ -30,40 +30,56 @@ public class AccountService {
         this.accountMapper = accountMapper;
     }
 
-    // Получение всех аккаунтов с пагинацией
+    // Чтение данных, транзакция с режимом только для чтения
+    @Transactional(readOnly = true)
     public Page<AccountDto> getAllAccounts(Pageable pageable) {
         return accountRepository.findAll(pageable)
-                .map(accountMapper::toDto);  // Преобразование в DTO с помощью маппера
+                .map(accountMapper::toDto); // Преобразование в Dto
     }
 
-    // Получение аккаунта по ID
-    public Optional<Account> getAccountById(Long accountId) {
-        return accountRepository.findById(accountId);
+
+    @Transactional(readOnly = true)
+    public AccountDto getAccountById(Long accountId) throws AccountNotFoundException {
+        return accountRepository.findById(accountId)
+                .map(accountMapper::toDto)  // Преобразование в Dto
+                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
+    }
+
+    // Создание нового аккаунта
+    @Transactional
+    public AccountDto createAccount(AccountDto accountDto) {
+        // Получаем пользователя по ID
+        User user = (User) userService.getUserById(accountDto.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User with id " + accountDto.getUserId() + " not found"));
+
+        // Преобразуем DTO в сущность Account
+        Account account = accountMapper.toEntity(accountDto, user);
+        account = accountRepository.save(account);  // Сохраняем новый аккаунт
+
+        return accountMapper.toDto(account);  // Преобразуем обратно в Dto
     }
 
     // Пополнение баланса аккаунта
     @Transactional
     public AccountDto deposit(Long accountId, BigDecimal amount) throws AccountNotFoundException {
-        Account account = accountRepository.findByIdForUpdate(accountId)
+        // Находим аккаунт
+        Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
 
-        account.setBalance(account.getBalance().add(amount));  // Логика пополнения баланса
-        accountRepository.save(account);  // Сохраняем изменения в базе данных
-        return accountMapper.toDto(account);  // Преобразуем обратно в DTO и возвращаем
+        // Обновляем баланс
+        account.setBalance(account.getBalance().add(amount));
+        accountRepository.save(account);  // Сохраняем изменения
+
+        return accountMapper.toDto(account);  // Преобразуем обратно в Dto
     }
 
-    // Создание нового аккаунта
+    // Удаление аккаунта
     @Transactional
-    public AccountDto createAccount(Long userId, String currency) {
-        User user = (User) userService.getUserById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+    public void deleteAccount(Long accountId) throws AccountNotFoundException {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
 
-        Account account = new Account();
-        account.setUser(user);
-        account.setCurrency(currency);
-        account.setBalance(BigDecimal.ZERO);  // Начальный баланс
-
-        Account savedAccount = accountRepository.save(account);  // Сохраняем новый аккаунт в базе
-        return accountMapper.toDto(savedAccount);  // Преобразуем сущность в DTO и возвращаем
+        accountRepository.delete(account);
     }
+
 }

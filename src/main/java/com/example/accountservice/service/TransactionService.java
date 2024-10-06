@@ -6,13 +6,13 @@ import com.example.accountservice.mapper.TransactionMapper;
 import com.example.accountservice.model.Account;
 import com.example.accountservice.model.Transaction;
 import com.example.accountservice.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -30,34 +30,37 @@ public class TransactionService {
         this.transactionMapper = transactionMapper;
     }
 
-//    // Получение транзакций для аккаунта
-//    public List<TransactionDto> getTransactionsByAccountId(Long accountId) {
-//        return transactionRepository.findByAccountId(accountId)
-//                .stream()
-//                .map(transactionMapper::toDto)  // Преобразование сущности в DTO
-//                .toList();
-//    }
-
-    // Получение транзакций для аккаунта с использованием пагинации
+    @Transactional(readOnly = true)
     public Page<TransactionDto> getTransactionsByAccountId(Long accountId, Pageable pageable) {
-        return transactionRepository.findByAccountId(accountId, pageable)
-                .map(transactionMapper::toDto);  // Преобразование в DTO с помощью маппера
+        // Используем правильный тип Pageable
+        Page<Transaction> transactionsPage = transactionRepository.findByAccountId(accountId, pageable);
+        // Преобразование транзакций в DTO
+        return transactionsPage.map(transactionMapper::toDto);
     }
 
     // Создание новой транзакции
     @Transactional
     public TransactionDto createTransaction(Long accountId, BigDecimal amount, String currency) throws AccountNotFoundException {
-        Account account = accountService.getAccountById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
+        // Получаем аккаунт напрямую
+        Account account = (Account) accountService.getAccountById(accountId);
 
+        // Проверяем, существует ли аккаунт
+        if (account == null) {
+            throw new AccountNotFoundException("Account with id " + accountId + " not found");
+        }
+
+        // Создаем транзакцию
         Transaction transaction = new Transaction();
         transaction.setAccount(account);
         transaction.setAmount(amount);
         transaction.setCurrency(currency);
         transaction.setTransactionDate(LocalDateTime.now());
 
-        Transaction savedTransaction = transactionRepository.save(transaction);  // Сохраняем транзакцию
-        return transactionMapper.toDto(savedTransaction);  // Преобразуем сущность в DTO и возвращаем
+        // Сохраняем транзакцию
+        Transaction savedTransaction = transactionRepository.save(transaction);
+
+        // Возвращаем результат как Dto
+        return transactionMapper.toDto(savedTransaction);
     }
 
     // Удаление транзакции

@@ -3,6 +3,8 @@ package com.example.accountservice.model;
 import com.example.accountservice.dto.UserDto;
 import jakarta.persistence.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,14 @@ public class User extends UserDto {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> accounts = new ArrayList<>();
+
+    public User(Long id, @NotNull(message = "Name cannot be null") @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters") String name, @NotNull(message = "Document number cannot be null") @Size(min = 5, max = 50, message = "Document number must be between 5 and 50 characters") String documentNumber, @NotNull(message = "Document type cannot be null") @Pattern(regexp = "PASSPORT|DRIVER_LICENSE", message = "Document type must be either 'PASSPORT' or 'DRIVER_LICENSE'") DocumentType documentType) {
+        super(id, name, documentNumber);
+    }
+
+    public User() {
+        super(null, "User 1", "doc1");
+    }
 
     public Long getId() {
         return id;
@@ -81,6 +91,16 @@ public class User extends UserDto {
     }
 
     @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", documentNumber='" + documentNumber + '\'' +
+                '}';
+    }
+
+    @Override
+
     public int hashCode() {
         return Objects.hash(id, name, documentNumber, documentType, accounts);
     }

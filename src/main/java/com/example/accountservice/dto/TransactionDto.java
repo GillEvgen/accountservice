@@ -12,6 +12,13 @@ public class TransactionDto {
     private Long accountId;
     private LocalDateTime transactionDate;
 
+    public TransactionDto(long l, BigDecimal bigDecimal, String usd) {
+    }
+
+    public TransactionDto() {
+
+    }
+
     // Getters и Setters
     public Long getId() {
         return id;
