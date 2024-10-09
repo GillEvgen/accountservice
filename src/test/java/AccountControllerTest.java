@@ -16,11 +16,18 @@ import java.math.BigDecimal;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountControllerTest {
+
+    private static final String EXPECTED_ACCOUNT_JSON = "{\n" +
+            "  \"id\": 1,\n" +
+            "  \"balance\": 100.00,\n" +
+            "  \"currency\": \"USD\"\n" +
+            "}";
+
+
     private MockMvc mockMvc;
 
     @Mock
@@ -37,11 +44,10 @@ public class AccountControllerTest {
 
         when(accountService.getAccountById(anyLong())).thenReturn(accountDto);
 
+        // Выполняем GET запрос и проверяем, что ответ совпадает с эталонным JSON
         mockMvc.perform(get("/api/accounts/1"))
-                .andExpect(status().isOk())  // Ожидаем статус 200 OK
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.balance").value(100.00))
-                .andExpect(jsonPath("$.currency").value("USD"));
+                .andExpect(status().isOk())
+                .andExpect(content().json(EXPECTED_ACCOUNT_JSON));  // Проверяем весь JSON целиком
     }
 
     @Test
