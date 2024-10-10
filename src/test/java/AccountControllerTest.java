@@ -27,7 +27,7 @@ public class AccountControllerTest {
             "  \"balance\": 100.00,\n" +
             "  \"currency\": \"USD\"\n" +
             "}";
-    
+
     private MockMvc mockMvc;
 
     @Mock

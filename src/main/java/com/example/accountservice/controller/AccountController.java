@@ -36,10 +36,10 @@ private final AccountService accountService;
         return accountService.deposit(id, amount);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{accountId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAccount(@PathVariable("id") Long id) throws AccountNotFoundException {
-        accountService.deleteAccount(id);
+    public void deleteAccount(@PathVariable("accountId") Long accountId) throws AccountNotFoundException {
+        accountService.deleteAccount(accountId);
     }
 
 }
