@@ -1,6 +1,7 @@
 import com.example.accountservice.controller.AccountController;
 import com.example.accountservice.dto.AccountDto;
 import com.example.accountservice.service.AccountService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -26,8 +27,7 @@ public class AccountControllerTest {
             "  \"balance\": 100.00,\n" +
             "  \"currency\": \"USD\"\n" +
             "}";
-
-
+    
     private MockMvc mockMvc;
 
     @Mock
@@ -35,6 +35,12 @@ public class AccountControllerTest {
 
     @InjectMocks
     private AccountController accountController;
+
+    @AfterEach
+    public void tearDown() {
+        // Проверяем, что не было дополнительных взаимодействий с accountService
+        verifyNoMoreInteractions(accountService);
+    }
 
     @Test
     public void testGetAccountById() throws Exception {
@@ -48,6 +54,9 @@ public class AccountControllerTest {
         mockMvc.perform(get("/api/accounts/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(EXPECTED_ACCOUNT_JSON));  // Проверяем весь JSON целиком
+
+        // Проверка вызова метода
+        verify(accountService).getAccountById(1L);
     }
 
     @Test
@@ -64,6 +73,9 @@ public class AccountControllerTest {
                 .andExpect(status().isCreated())  // Ожидаем статус 201 Created
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.currency").value("USD"));
+
+        // Проверка вызова метода
+        verify(accountService).createAccount(any(AccountDto.class));
     }
 
     @Test
