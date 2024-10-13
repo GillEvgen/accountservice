@@ -38,7 +38,8 @@ public class Transaction extends TransactionDto {
     @NotNull(message = "Дата транзакции не может быть нулевой.")
     private LocalDateTime transactionDate;
 
-    TransactionType transactionType;
+    @Enumerated (EnumType.STRING)
+    private TransactionType transactionType;
 
     public Transaction() {
     }
@@ -91,7 +92,7 @@ public class Transaction extends TransactionDto {
         this.transactionDate = transactionDate;
     }
 
-    public TransactionType getTransactionType() {
+    public TransactionType getTransactionType(TransactionType deposit) {
         return transactionType;
     }
 

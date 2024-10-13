@@ -64,21 +64,62 @@ public class TransactionService {
         return transactionMapper.toDto(savedTransaction);
     }
 
-//    public TransactionDto deposit(Long accountId, BigDecimal amount) {
-//        Transaction transaction = new Transaction();
-//        transaction.setAccountId(accountId);
-//        transaction.setAmount(amount);
-//        transaction.setCurrency("USD");  // Пример
-//        transaction.setType(TransactionType.DEPOSIT);
-//        transaction.setTimestamp(LocalDateTime.now());
-//
-//        transactionRepository.save(transaction);
-//
-//        // Обновляем баланс аккаунта
-//        accountService.updateBalance(accountId, amount);
-//
-//        return transactionMapper.toDto(transaction);
-//    }
+    public TransactionDto deposit(Long accountId, BigDecimal amount) throws AccountNotFoundException {
+        Transaction transaction = new Transaction();
+        transaction.setAccountId(accountId);
+        transaction.setAmount(amount);
+        transaction.setCurrency("USD");  // Пример
+        transaction.getTransactionType(TransactionType.DEPOSIT);
+        transaction.setTransactionDate(LocalDateTime.now());
+
+        transactionRepository.save(transaction);
+
+        // Обновляем баланс аккаунта
+        accountService.updateBalance(accountId, amount);
+
+        return transactionMapper.toDto(transaction);
+    }
+
+    public TransactionDto transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) {
+        // Логика снятия средств с одного аккаунта и зачисления на другой
+
+        Transaction withdrawal = new Transaction();
+        withdrawal.setAccountId(fromAccountId);
+        withdrawal.setAmount(amount.negate());  // Отрицательная сумма для снятия
+        withdrawal.setTransactionType(TransactionType.TRANSFER);
+        withdrawal.setTransactionDate(LocalDateTime.now());
+        transactionRepository.save(withdrawal);
+
+        Transaction deposit = new Transaction();
+        deposit.setAccountId(toAccountId);
+        deposit.setAmount(amount);
+        deposit.setTransactionType(TransactionType.TRANSFER);
+        deposit.setTransactionDate(LocalDateTime.now());
+        transactionRepository.save(deposit);
+
+        return transactionMapper.toDto(deposit);
+    }
+
+    @Transactional
+    public TransactionDto withdraw(Long accountId, BigDecimal amount) throws AccountNotFoundException, IllegalArgumentException {
+        // Создаем объект транзакции
+        Transaction transaction = new Transaction();
+        transaction.setAccountId(accountId);
+        transaction.setAmount(amount.negate());  // Отрицательная сумма для снятия
+        transaction.setCurrency("USD");  // Пример валюты, может быть параметром метода
+        transaction.setTransactionType(TransactionType.WITHDRAWAL);  // Тип транзакции - снятие
+        transaction.setTransactionDate(LocalDateTime.now());
+
+        // Сохраняем транзакцию в базе данных
+        transactionRepository.save(transaction);
+
+        // Обновляем баланс аккаунта с отрицательной суммой (снимаем средства)
+        accountService.updateBalance(accountId, amount.negate());
+
+        // Возвращаем DTO транзакции
+        return transactionMapper.toDto(transaction);
+    }
+
     // Удаление транзакции
     @Transactional
     public void deleteTransaction(Long transactionId) {

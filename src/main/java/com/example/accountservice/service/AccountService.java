@@ -82,4 +82,25 @@ public class AccountService {
         accountRepository.delete(account);
     }
 
+    @Transactional
+    public void updateBalance(Long accountId, BigDecimal amount) throws AccountNotFoundException, IllegalArgumentException {
+        // Находим аккаунт
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
+
+        // Рассчитываем новый баланс
+        BigDecimal newBalance = account.getBalance().add(amount);
+
+        // Проверяем, не станет ли баланс отрицательным
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Баланс не может быть отрицательным.");
+        }
+
+        // Обновляем баланс аккаунта
+        account.setBalance(newBalance);
+
+        // Сохраняем изменения
+        accountRepository.save(account);
+    }
+
 }
