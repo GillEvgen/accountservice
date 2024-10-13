@@ -5,6 +5,7 @@ import com.example.accountservice.exception.TransactionNotFoundException;
 import com.example.accountservice.mapper.TransactionMapper;
 import com.example.accountservice.model.Account;
 import com.example.accountservice.model.Transaction;
+import com.example.accountservice.model.TransactionType;
 import com.example.accountservice.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,6 +64,21 @@ public class TransactionService {
         return transactionMapper.toDto(savedTransaction);
     }
 
+//    public TransactionDto deposit(Long accountId, BigDecimal amount) {
+//        Transaction transaction = new Transaction();
+//        transaction.setAccountId(accountId);
+//        transaction.setAmount(amount);
+//        transaction.setCurrency("USD");  // Пример
+//        transaction.setType(TransactionType.DEPOSIT);
+//        transaction.setTimestamp(LocalDateTime.now());
+//
+//        transactionRepository.save(transaction);
+//
+//        // Обновляем баланс аккаунта
+//        accountService.updateBalance(accountId, amount);
+//
+//        return transactionMapper.toDto(transaction);
+//    }
     // Удаление транзакции
     @Transactional
     public void deleteTransaction(Long transactionId) {

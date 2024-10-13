@@ -38,6 +38,8 @@ public class Transaction extends TransactionDto {
     @NotNull(message = "Дата транзакции не может быть нулевой.")
     private LocalDateTime transactionDate;
 
+    TransactionType transactionType;
+
     public Transaction() {
     }
 
@@ -89,20 +91,42 @@ public class Transaction extends TransactionDto {
         this.transactionDate = transactionDate;
     }
 
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", account=" + account +
+                ", amount=" + amount +
+                ", currency='" + currency + '\'' +
+                ", transactionDate=" + transactionDate +
+                ", transactionType=" + transactionType +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Transaction that = (Transaction) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(account, that.account) &&
                 Objects.equals(amount, that.amount) &&
                 Objects.equals(currency, that.currency) &&
-                Objects.equals(transactionDate, that.transactionDate);
+                Objects.equals(transactionDate, that.transactionDate) &&
+                transactionType == that.transactionType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, account, amount, currency, transactionDate);
+        return Objects.hash(super.hashCode(), id, account, amount, currency, transactionDate, transactionType);
     }
 }

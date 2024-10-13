@@ -28,18 +28,14 @@ public class TransactionController {
     }
 
     // Создание новой транзакции
-    @PostMapping
+    @PostMapping("/api/accounts/{accountId}/transactions")
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionDto createTransaction(@Valid @PathVariable Long accountId, @RequestBody TransactionDto transactionDto) throws AccountNotFoundException {
-        return transactionService.createTransaction(
-                transactionDto.getAccountId(),
-                transactionDto.getAmount(),
-                transactionDto.getCurrency()
-        );
+    public TransactionDto createTransaction(@PathVariable Long accountId, @Valid @RequestBody TransactionDto transactionDto) throws AccountNotFoundException {
+        return transactionService.createTransaction(accountId, transactionDto.getAmount(), transactionDto.getCurrency());
     }
 
     // Удаление транзакции
-    @DeleteMapping("/{transactionId}")
+    @DeleteMapping("/api/accounts/{accountId}/transactions/{transactionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTransaction(@PathVariable Long transactionId) {
         transactionService.deleteTransaction(transactionId);

@@ -96,7 +96,14 @@ public class AccountControllerTest {
     public void testDeleteAccount() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
 
+        // Настраиваем поведение мок-объекта для метода deleteAccount
+        doNothing().when(accountService).deleteAccount(1L);
+
+        // Выполняем запрос DELETE
         mockMvc.perform(delete("/api/accounts/1"))
                 .andExpect(status().isNoContent());  // Ожидаем статус 204 No Content
+
+        // Проверяем вызов метода deleteAccount
+        verify(accountService).deleteAccount(1L);
     }
 }
