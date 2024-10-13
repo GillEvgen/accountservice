@@ -4,7 +4,6 @@ import com.example.accountservice.dto.TransactionDto;
 import com.example.accountservice.service.TransactionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +21,7 @@ public class TransactionController {
     }
 
     @GetMapping("/{accountId}/transactions")
-    public Page<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId,
-                                                           @PageableDefault(size = 10, page = 0)Pageable pageable) {
+    public Page<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId, Pageable pageable) {
         return transactionService.getTransactionsByAccountId(accountId, pageable);
     }
 
