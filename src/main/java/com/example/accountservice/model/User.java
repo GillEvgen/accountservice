@@ -35,10 +35,6 @@ public class User extends UserDto {
         super(id, name, documentNumber);
     }
 
-    public User() {
-        super(null, "User 1", "doc1");
-    }
-
     public Long getId() {
         return id;
     }

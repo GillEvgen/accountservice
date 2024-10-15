@@ -30,10 +30,6 @@ public class AccountDto {
         this.balance = balance;
     }
 
-    public AccountDto() {
-
-    }
-
     // Getters и Setters
     public Long getId() {
         return id;

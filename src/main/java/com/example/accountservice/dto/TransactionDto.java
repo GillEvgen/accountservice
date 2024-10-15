@@ -12,7 +12,12 @@ public class TransactionDto {
     private Long accountId;
     private LocalDateTime transactionDate;
 
-    public TransactionDto(long l, BigDecimal bigDecimal, String usd) {
+    public TransactionDto(Long id, BigDecimal amount, String currency, Long accountId, LocalDateTime transactionDate) {
+        this.id = id;
+        this.amount = amount;
+        this.currency = currency;
+        this.accountId = accountId;
+        this.transactionDate = transactionDate;
     }
 
     public TransactionDto() {

@@ -23,13 +23,6 @@ public class UserDto {
     @Pattern(regexp = "PASSPORT|DRIVER_LICENSE", message = "Document type must be either 'PASSPORT' or 'DRIVER_LICENSE'")
     private DocumentType documentType;
 
-//    public UserDto(Long id, @NotNull(message = "Name cannot be null") @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters") String name, @NotNull(message = "Document number cannot be null") @Size(min = 5, max = 50, message = "Document number must be between 5 and 50 characters") String documentNumber, @NotNull(message = "Document type cannot be null") @Pattern(regexp = "PASSPORT|DRIVER_LICENSE", message = "Document type must be either 'PASSPORT' or 'DRIVER_LICENSE'") DocumentType documentType) {
-//        this.id = id;
-//        this.name = name;
-//        this.documentNumber = documentNumber;
-//        this.documentType = documentType;
-//    }
-
     public UserDto(Long id, @NotNull(message = "Name cannot be null") @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters") String name, @NotNull(message = "Document number cannot be null") @Size(min = 5, max = 50, message = "Document number must be between 5 and 50 characters") String documentNumber) {
         this.id = id;
         this.name = name;

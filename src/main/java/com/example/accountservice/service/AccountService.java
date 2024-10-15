@@ -43,7 +43,7 @@ public class AccountService {
     public AccountDto getAccountById(Long accountId) throws AccountNotFoundException {
         return accountRepository.findById(accountId)
                 .map(accountMapper::toDto)  // Преобразование в Dto
-                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
+                .orElseThrow(() -> new AccountNotFoundException());
     }
 
     // Создание нового аккаунта
@@ -65,7 +65,7 @@ public class AccountService {
     public AccountDto deposit(Long accountId, BigDecimal amount) throws AccountNotFoundException {
         // Находим аккаунт
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
+                .orElseThrow(() -> new AccountNotFoundException());
 
         // Обновляем баланс
         account.setBalance(account.getBalance().add(amount));
@@ -78,7 +78,7 @@ public class AccountService {
     @Transactional
     public void deleteAccount(Long accountId) throws AccountNotFoundException {
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
+                .orElseThrow(() -> new AccountNotFoundException());
 
         accountRepository.delete(account);
     }
@@ -87,7 +87,7 @@ public class AccountService {
     public void updateBalance(Long accountId, BigDecimal amount) throws AccountNotFoundException, IllegalArgumentException {
         // Находим аккаунт
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found"));
+                .orElseThrow(() -> new AccountNotFoundException());
 
         // Рассчитываем новый баланс
         BigDecimal newBalance = account.getBalance().add(amount);
@@ -103,5 +103,4 @@ public class AccountService {
         // Сохраняем изменения
         accountRepository.save(account);
     }
-
 }
