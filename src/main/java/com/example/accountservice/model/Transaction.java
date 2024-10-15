@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "transaction")
 public class Transaction extends TransactionDto {
 
     @Id
