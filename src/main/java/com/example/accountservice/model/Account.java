@@ -44,7 +44,6 @@ public class Account extends AccountDto {
         super();
     }
 
-
     public Long getId() {
         return id;
     }

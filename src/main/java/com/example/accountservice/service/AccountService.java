@@ -30,13 +30,14 @@ public class AccountService {
         this.accountMapper = accountMapper;
     }
 
-    // Чтение данных, транзакция с режимом только для чтения
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)  // Метод не изменяет данные, поэтому транзакция только для чтения
     public Page<AccountDto> getAllAccounts(Pageable pageable) {
-        return accountRepository.findAll(pageable)
-                .map(accountMapper::toDto); // Преобразование в Dto
-    }
+        // Получение страницы аккаунтов с помощью репозитория
+        Page<Account> accountsPage = accountRepository.findAll(pageable);
 
+        // Преобразование каждого Account в AccountDto и возвращение страницы с DTO
+        return accountsPage.map(accountMapper::toDto);
+    }
 
     @Transactional(readOnly = true)
     public AccountDto getAccountById(Long accountId) throws AccountNotFoundException {

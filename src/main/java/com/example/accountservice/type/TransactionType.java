@@ -1,4 +1,4 @@
-package com.example.accountservice.model;
+package com.example.accountservice.type;
 
 public enum TransactionType {
     DEPOSIT,    // Пополнение

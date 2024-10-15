@@ -1,6 +1,7 @@
 package com.example.accountservice.model;
 
 import com.example.accountservice.dto.UserDto;
+import com.example.accountservice.type.DocumentType;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.NotNull;

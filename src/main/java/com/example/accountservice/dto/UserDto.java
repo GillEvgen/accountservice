@@ -1,6 +1,6 @@
 package com.example.accountservice.dto;
 
-import com.example.accountservice.model.DocumentType;
+import com.example.accountservice.type.DocumentType;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

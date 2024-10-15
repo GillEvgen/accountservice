@@ -2,6 +2,7 @@
 package com.example.accountservice.model;
 
 import com.example.accountservice.dto.TransactionDto;
+import com.example.accountservice.type.TransactionType;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.NotNull;

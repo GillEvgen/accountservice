@@ -2,6 +2,8 @@ package com.example.accountservice.controller;
 
 import com.example.accountservice.dto.AccountDto;
 import com.example.accountservice.service.AccountService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,11 @@ private final AccountService accountService;
         this.accountService = accountService;
     }
 
+    @GetMapping
+    public ResponseEntity<Page<AccountDto>> getAllAccounts(Pageable pageable) {
+        Page<AccountDto> accounts = accountService.getAllAccounts(pageable);
+        return ResponseEntity.ok(accounts);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable("id") Long id) throws AccountNotFoundException {
         AccountDto account = accountService.getAccountById(id);
