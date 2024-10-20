@@ -21,7 +21,7 @@ public class AccountMapper {
 
     // Преобразование AccountDTO в Account (для создания аккаунта)
     public Account toEntity(AccountDto dto, User user) {
-        Account account = new Account();
+        Account account = new Account(1L, 1L, "USD", new BigDecimal("100.00"));
         account.setUser(user);
         account.setCurrency(dto.getCurrency());
         account.setBalance(dto.getBalance());

@@ -46,8 +46,8 @@ public class UserController {
     // Создание нового пользователя
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@Valid @RequestBody UserDto userDTO) {
-        return userService.createUser(userDTO);
+    public UserDto create(@Valid @RequestBody UserDto userDTO) {
+        return userService.create(userDTO);
     }
 
 //    // Обновление данных пользователя
@@ -59,7 +59,7 @@ public class UserController {
     // Удаление пользователя
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
+    public void delete(@PathVariable Long userId) {
+        userService.delete(userId);
     }
 }

@@ -32,7 +32,6 @@ public class Account extends AccountDto {
     @Size(min = 3, max = 3, message = "Код валюты должен состоять из 3 символов.")
     private String currency;
 
-
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 import com.example.accountservice.controller.UserController;
 import com.example.accountservice.dto.UserDto;
 import com.example.accountservice.service.UserService;
+import com.example.accountservice.type.DocumentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -40,14 +42,20 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        // Добавляем PageableHandlerMethodArgumentResolver для поддержки пагинации
+        PageableHandlerMethodArgumentResolver pageableArgumentResolver = new PageableHandlerMethodArgumentResolver();
+
+        // Инициализируем MockMvc с контроллером и резолвером для пагинации
+        mockMvc = MockMvcBuilders.standaloneSetup(userController)
+                .setCustomArgumentResolvers(pageableArgumentResolver) // Добавляем резолвер пагинации
+                .build();
     }
 
     @Test
     public void testGetAllUsers() throws Exception {
         // Данные для теста
-        UserDto user1 = new UserDto(1L, "User 1", "doc1");
-        UserDto user2 = new UserDto(2L, "User 2", "doc2");
+        UserDto user1 = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
+        UserDto user2 = new UserDto(2L, "User 2", "2", DocumentType.PASSPORT);
 
         Pageable pageRequest = PageRequest.of(0, 10);
         Page<UserDto> userPage = new PageImpl<>(List.of(user1, user2), pageRequest, 2);
@@ -56,7 +64,9 @@ public class UserControllerTest {
         when(userService.getAllUsers(pageRequest)).thenReturn(userPage);
 
         // Выполняем GET запрос с параметрами пагинации
-        mockMvc.perform(get("/api/users?page=0&size=10"))  // Передаем параметры пагинации
+        mockMvc.perform(get("/api/users")
+                .param("page", "0")  // Параметр "page"
+                .param("size", "10"))  // Параметр "size"
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].name").value("User 1"))
@@ -67,7 +77,7 @@ public class UserControllerTest {
     @Test
     public void testGetUserById_Success() throws Exception {
         // Данные для теста
-        UserDto user = new UserDto(1L, "User 1", "doc1");
+        UserDto user = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
 
         when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
 
@@ -81,12 +91,12 @@ public class UserControllerTest {
     @Test
     public void testGetUserByDocument_Success() throws Exception {
         // Данные для теста
-        UserDto user = new UserDto(1L, "User 1", "doc1");
+        UserDto user = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
 
         when(userService.getUserByDocument(any(String.class))).thenReturn(Optional.of(user));
 
         // Выполняем GET запрос
-        mockMvc.perform(get("/api/users/document/{documentNumber}", "doc1"))
+        mockMvc.perform(get("/api/users/document/{documentNumber}", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("User 1"));
@@ -94,14 +104,14 @@ public class UserControllerTest {
 
     @Test
     public void testCreateUser() throws Exception {
-        UserDto createdUserDto = new UserDto(1L, "User 1", "doc1");
+        UserDto createdUserDto = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
 
-        when(userService.createUser(any(UserDto.class))).thenReturn(createdUserDto);
+        when(userService.create(any(UserDto.class))).thenReturn(createdUserDto);
 
         // Выполняем POST запрос
         mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"User 1\",\"documentNumber\":\"doc1\"}"))
+                .content("{\"name\":\"User 1\",\"documentNumber\":\"1\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("User 1"));

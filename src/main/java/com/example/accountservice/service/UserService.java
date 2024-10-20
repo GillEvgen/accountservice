@@ -48,7 +48,7 @@ public class UserService {
 
     // Создание нового пользователя
     @Transactional
-    public UserDto createUser(UserDto userDto) {
+    public UserDto create(UserDto userDto) {
         User user = userMapper.toEntity(userDto);  // Преобразуем Dto в сущность
         User savedUser = userRepository.save(user);  // Сохраняем пользователя
 
@@ -57,7 +57,7 @@ public class UserService {
 
     // Удаление пользователя
     @Transactional
-    public void deleteUser(Long userId) {
+    public void delete(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
 

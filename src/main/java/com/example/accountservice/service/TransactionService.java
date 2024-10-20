@@ -41,7 +41,7 @@ public class TransactionService {
 
     // Создание новой транзакции
     @Transactional
-    public TransactionDto createTransaction(Long accountId, BigDecimal amount, String currency) throws AccountNotFoundException {
+    public TransactionDto create(Long accountId, BigDecimal amount, String currency) throws AccountNotFoundException {
         // Получаем аккаунт напрямую
         Account account = (Account) accountService.getAccountById(accountId);
 
@@ -122,7 +122,7 @@ public class TransactionService {
 
     // Удаление транзакции
     @Transactional
-    public void deleteTransaction(Long transactionId) {
+    public void delete(Long transactionId) {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new TransactionNotFoundException("Transaction with id " + transactionId + " not found"));
 

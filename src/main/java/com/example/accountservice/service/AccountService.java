@@ -48,7 +48,7 @@ public class AccountService {
 
     // Создание нового аккаунта
     @Transactional
-    public AccountDto createAccount(AccountDto accountDto) {
+    public AccountDto create(AccountDto accountDto) {
         // Получаем пользователя по ID
         User user = (User) userService.getUserById(accountDto.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User with id " + accountDto.getUserId() + " not found"));
@@ -76,7 +76,7 @@ public class AccountService {
 
     // Удаление аккаунта
     @Transactional
-    public void deleteAccount(Long accountId) throws AccountNotFoundException {
+    public void delete(Long accountId) throws AccountNotFoundException {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException());
 

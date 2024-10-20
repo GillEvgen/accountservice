@@ -65,7 +65,7 @@ public class AccountControllerTest {
 
         AccountDto accountDto = new AccountDto(1L, 1L, "USD", new BigDecimal("0.00"));
 
-        when(accountService.createAccount(Mockito.any(AccountDto.class))).thenReturn(accountDto);
+        when(accountService.create(Mockito.any(AccountDto.class))).thenReturn(accountDto);
 
         mockMvc.perform(post("/api/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +75,7 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$.currency").value("USD"));
 
         // Проверка вызова метода
-        verify(accountService).createAccount(any(AccountDto.class));
+        verify(accountService).create(any(AccountDto.class));
     }
 
     @Test
@@ -96,14 +96,14 @@ public class AccountControllerTest {
     public void testDeleteAccount() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
 
-        // Настраиваем поведение мок-объекта для метода deleteAccount
-        doNothing().when(accountService).deleteAccount(1L);
+        // Настраиваем поведение мок-объекта для метода delete
+        doNothing().when(accountService).delete(1L);
 
         // Выполняем запрос DELETE
         mockMvc.perform(delete("/api/accounts/1"))
                 .andExpect(status().isNoContent());  // Ожидаем статус 204 No Content
 
-        // Проверяем вызов метода deleteAccount
-        verify(accountService).deleteAccount(1L);
+        // Проверяем вызов метода delete
+        verify(accountService).delete(1L);
     }
 }

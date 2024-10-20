@@ -42,20 +42,6 @@ public class Transaction extends TransactionDto {
     @Enumerated (EnumType.STRING)
     private TransactionType transactionType;
 
-    public Transaction(Long id, BigDecimal amount, String currency, Long accountId, LocalDateTime transactionDate, Long id1, @NotNull(message = "Аккаунт не может быть пустым") Account account, @Positive(message = "Сумма должна быть положительной") BigDecimal amount1, @NotNull(message = "Валюта не может быть нулевой") @Size(min = 3, max = 3, message = "Код валюты должен состоять из 3 символов.") String currency1, @NotNull(message = "Дата транзакции не может быть нулевой.") LocalDateTime transactionDate1, TransactionType transactionType) {
-        super(id, amount, currency, accountId, transactionDate);
-        this.id = id1;
-        this.account = account;
-        this.amount = amount1;
-        this.currency = currency1;
-        this.transactionDate = transactionDate1;
-        this.transactionType = transactionType;
-    }
-
-    public Transaction() {
-        super();
-    }
-
     public Long getId() {
         return id;
     }

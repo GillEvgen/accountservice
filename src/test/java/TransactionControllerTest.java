@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)  // Используем MockitoExtension для работы с моками
+@ExtendWith(MockitoExtension.class)
 public class TransactionControllerTest {
 
     private MockMvc mockMvc;
@@ -37,15 +38,27 @@ public class TransactionControllerTest {
 
     @BeforeEach
     public void setUp() {
-        // Инициализируем MockMvc с контроллером
-        mockMvc = MockMvcBuilders.standaloneSetup(transactionController).build();
+        // Добавляем PageableHandlerMethodArgumentResolver для поддержки пагинации
+        PageableHandlerMethodArgumentResolver pageableArgumentResolver = new PageableHandlerMethodArgumentResolver();
+
+        // Инициализируем MockMvc с контроллером и резолвером для пагинации
+        mockMvc = MockMvcBuilders.standaloneSetup(transactionController)
+                .setCustomArgumentResolvers(pageableArgumentResolver)
+                .build();
     }
 
     @Test
     public void testGetTransactionsByAccountId() throws Exception {
         // Создаем DTO транзакций с корректными id
-        TransactionDto transaction1 = new TransactionDto(1L, new BigDecimal("100.00"), "USD");
-        TransactionDto transaction2 = new TransactionDto(2L, new BigDecimal("200.00"), "USD");
+        TransactionDto transaction1 = new TransactionDto();
+        transaction1.setId(1L);
+        transaction1.setAmount(new BigDecimal("100.00"));
+        transaction1.setCurrency("USD");
+
+        TransactionDto transaction2 = new TransactionDto();
+        transaction2.setId(2L);
+        transaction2.setAmount(new BigDecimal("200.00"));
+        transaction2.setCurrency("USD");
 
         // Создаем объект Pageable
         Pageable pageable = PageRequest.of(0, 10);

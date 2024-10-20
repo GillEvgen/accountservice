@@ -27,15 +27,14 @@ private final AccountService accountService;
         return ResponseEntity.ok(accounts);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable("id") Long id) throws AccountNotFoundException {
-        AccountDto account = accountService.getAccountById(id);
-        return ResponseEntity.ok(account);
+    public AccountDto getAccountById(@PathVariable("id") Long id) throws AccountNotFoundException {
+          return accountService.getAccountById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
-        return accountService.createAccount(accountDto);
+    public AccountDto create(@RequestBody AccountDto accountDto) {
+        return accountService.create(accountDto);
     }
 
     @PutMapping("/{id}/deposit")
@@ -45,8 +44,8 @@ private final AccountService accountService;
 
     @DeleteMapping("/{accountId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAccount(@PathVariable("accountId") Long accountId) throws AccountNotFoundException {
-        accountService.deleteAccount(accountId);
+    public void delete(@PathVariable("accountId") Long accountId) throws AccountNotFoundException {
+        accountService.delete(accountId);
     }
 
 }

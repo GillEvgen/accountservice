@@ -12,18 +12,6 @@ public class TransactionDto {
     private Long accountId;
     private LocalDateTime transactionDate;
 
-    public TransactionDto(Long id, BigDecimal amount, String currency, Long accountId, LocalDateTime transactionDate) {
-        this.id = id;
-        this.amount = amount;
-        this.currency = currency;
-        this.accountId = accountId;
-        this.transactionDate = transactionDate;
-    }
-
-    public TransactionDto() {
-
-    }
-
     // Getters и Setters
     public Long getId() {
         return id;
@@ -81,4 +69,5 @@ public class TransactionDto {
     public int hashCode() {
         return Objects.hash(id, amount, currency, accountId, transactionDate);
     }
+
 }
