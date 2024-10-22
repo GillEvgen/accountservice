@@ -22,14 +22,6 @@ public class AccountDto {
     @Positive(message = "Баланс должен быть отрицатиельным")
     private BigDecimal balance;
 
-
-    public AccountDto(Long id, Long userId, String currency, BigDecimal balance) {
-        this.id = id;
-        this.userId = userId;
-        this.currency = currency;
-        this.balance = balance;
-    }
-
     // Getters и Setters
     public Long getId() {
         return id;

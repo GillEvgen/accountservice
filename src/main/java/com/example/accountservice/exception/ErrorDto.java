@@ -2,13 +2,13 @@ package com.example.accountservice.exception;
 
 import java.time.LocalDateTime;
 
-public class ErrorDTO {
+public class ErrorDto {
     private LocalDateTime timestamp;
     private String message;
     private String details;
     private int status;
 
-    public ErrorDTO(LocalDateTime timestamp, String message, String details, int status) {
+    public ErrorDto(LocalDateTime timestamp, String message, String details, int status) {
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;

@@ -54,8 +54,8 @@ public class UserControllerTest {
     @Test
     public void testGetAllUsers() throws Exception {
         // Данные для теста
-        UserDto user1 = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
-        UserDto user2 = new UserDto(2L, "User 2", "2", DocumentType.PASSPORT);
+        UserDto user1 = new UserDto();
+        UserDto user2 = new UserDto();
 
         Pageable pageRequest = PageRequest.of(0, 10);
         Page<UserDto> userPage = new PageImpl<>(List.of(user1, user2), pageRequest, 2);
@@ -77,7 +77,7 @@ public class UserControllerTest {
     @Test
     public void testGetUserById_Success() throws Exception {
         // Данные для теста
-        UserDto user = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
+        UserDto user = new UserDto();
 
         when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
 
@@ -91,7 +91,7 @@ public class UserControllerTest {
     @Test
     public void testGetUserByDocument_Success() throws Exception {
         // Данные для теста
-        UserDto user = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
+        UserDto user = new UserDto();
 
         when(userService.getUserByDocument(any(String.class))).thenReturn(Optional.of(user));
 
@@ -104,7 +104,7 @@ public class UserControllerTest {
 
     @Test
     public void testCreateUser() throws Exception {
-        UserDto createdUserDto = new UserDto(1L, "User 1", "1", DocumentType.PASSPORT);
+        UserDto createdUserDto = new UserDto();
 
         when(userService.create(any(UserDto.class))).thenReturn(createdUserDto);
 

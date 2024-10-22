@@ -2,6 +2,7 @@ package com.example.accountservice.controller;
 
 import com.example.accountservice.dto.TransactionDto;
 import com.example.accountservice.service.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,26 +17,20 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
+    @Autowired
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
     @GetMapping("/{accountId}/transactions")
-    public Page<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId, Pageable pageable) {
-        return transactionService.getTransactionsByAccountId(accountId, pageable);
+    public Page<TransactionDto> getTransactionsByAccountId(@PathVariable Long id, Pageable pageable) {
+        return transactionService.getTransactionsByAccountId(id, pageable);
     }
 
     // Создание новой транзакции
-    @PostMapping("/api/accounts/{accountId}/transactions")
+    @PostMapping("/{accountId}/transactions")
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionDto create(@PathVariable Long accountId, @Valid @RequestBody TransactionDto transactionDto) throws AccountNotFoundException {
-        return transactionService.create(accountId, transactionDto.getAmount(), transactionDto.getCurrency());
-    }
-
-    // Удаление транзакции
-    @DeleteMapping("/api/accounts/{accountId}/transactions/{transactionId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long transactionId) {
-        transactionService.delete(transactionId);
+    public TransactionDto create(@PathVariable Long id, @Valid @RequestBody TransactionDto transactionDto) throws AccountNotFoundException {
+        return transactionService.create(id, transactionDto.getAmount(), transactionDto.getCurrency());
     }
 }

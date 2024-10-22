@@ -40,8 +40,8 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public AccountDto getAccountById(Long accountId) throws AccountNotFoundException {
-        return accountRepository.findById(accountId)
+    public AccountDto getAccountById(Long id) throws AccountNotFoundException {
+        return accountRepository.findById(id)
                 .map(accountMapper::toDto)  // Преобразование в Dto
                 .orElseThrow(() -> new AccountNotFoundException());
     }
@@ -62,9 +62,9 @@ public class AccountService {
 
     // Пополнение баланса аккаунта
     @Transactional
-    public AccountDto deposit(Long accountId, BigDecimal amount) throws AccountNotFoundException {
+    public AccountDto deposit(Long id, BigDecimal amount) throws AccountNotFoundException {
         // Находим аккаунт
-        Account account = accountRepository.findById(accountId)
+        Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException());
 
         // Обновляем баланс
@@ -76,17 +76,17 @@ public class AccountService {
 
     // Удаление аккаунта
     @Transactional
-    public void delete(Long accountId) throws AccountNotFoundException {
-        Account account = accountRepository.findById(accountId)
+    public void delete(Long id) throws AccountNotFoundException {
+        Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException());
 
         accountRepository.delete(account);
     }
 
     @Transactional
-    public void updateBalance(Long accountId, BigDecimal amount) throws AccountNotFoundException, IllegalArgumentException {
+    public void updateBalance(Long id, BigDecimal amount) throws AccountNotFoundException, IllegalArgumentException {
         // Находим аккаунт
-        Account account = accountRepository.findById(accountId)
+        Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException());
 
         // Рассчитываем новый баланс

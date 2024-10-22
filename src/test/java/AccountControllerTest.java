@@ -46,7 +46,7 @@ public class AccountControllerTest {
     public void testGetAccountById() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
 
-        AccountDto accountDto = new AccountDto(1L, 1L, "USD", new BigDecimal("100.00"));
+        AccountDto accountDto = new AccountDto();
 
         when(accountService.getAccountById(anyLong())).thenReturn(accountDto);
 
@@ -63,7 +63,7 @@ public class AccountControllerTest {
     public void testCreateAccount() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
 
-        AccountDto accountDto = new AccountDto(1L, 1L, "USD", new BigDecimal("0.00"));
+        AccountDto accountDto = new AccountDto();
 
         when(accountService.create(Mockito.any(AccountDto.class))).thenReturn(accountDto);
 
@@ -82,7 +82,7 @@ public class AccountControllerTest {
     public void testDeposit() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
 
-        AccountDto accountDto = new AccountDto(1L, 1L, "USD", new BigDecimal("150.00"));
+        AccountDto accountDto = new AccountDto();
 
         when(accountService.deposit(anyLong(), Mockito.any(BigDecimal.class))).thenReturn(accountDto);
 

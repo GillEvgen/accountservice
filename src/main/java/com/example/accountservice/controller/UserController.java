@@ -46,8 +46,8 @@ public class UserController {
     // Создание нового пользователя
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@Valid @RequestBody UserDto userDTO) {
-        return userService.create(userDTO);
+    public UserDto create(@Valid @RequestBody UserDto userDto) {
+        return userService.create(userDto);
     }
 
 //    // Обновление данных пользователя

@@ -4,7 +4,6 @@ import com.example.accountservice.dto.AccountDto;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,15 +33,6 @@ public class Account extends AccountDto {
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
-
-    public Account(@NotNull(message = "ID не может быть null") Long id,
-                   @NotNull(message = "User ID не может быть null") Long userId,
-                   @NotNull(message = "Валюта не может быть нулевой")
-                   @Size(min = 3, max = 3, message = "Код валюты должен состоять из 3 символов.") String currency,
-                   @NotNull(message = "Баланс не может быть нулевым")
-                   @Positive(message = "Баланс должен быть отрицатиельным") BigDecimal balance) {
-        super(id, userId, currency, balance);
-    }
 
     public Long getId() {
         return id;

@@ -32,22 +32,22 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<TransactionDto> getTransactionsByAccountId(Long accountId, Pageable pageable) {
+    public Page<TransactionDto> getTransactionsByAccountId(Long id, Pageable pageable) {
         // Используем правильный тип Pageable
-        Page<Transaction> transactionsPage = transactionRepository.findByAccountId(accountId, pageable);
+        Page<Transaction> transactionsPage = transactionRepository.findByAccountId(id, pageable);
         // Преобразование транзакций в DTO
         return transactionsPage.map(transactionMapper::toDto);
     }
 
     // Создание новой транзакции
     @Transactional
-    public TransactionDto create(Long accountId, BigDecimal amount, String currency) throws AccountNotFoundException {
+    public TransactionDto create(Long id, BigDecimal amount, String currency) throws AccountNotFoundException {
         // Получаем аккаунт напрямую
-        Account account = (Account) accountService.getAccountById(accountId);
+        Account account = (Account) accountService.getAccountById(id);
 
         // Проверяем, существует ли аккаунт
         if (account == null) {
-            throw new AccountNotFoundException("Account with id " + accountId + " not found");
+            throw new AccountNotFoundException("Account with id " + id + " not found");
         }
 
         // Создаем транзакцию
@@ -64,9 +64,10 @@ public class TransactionService {
         return transactionMapper.toDto(savedTransaction);
     }
 
-    public TransactionDto deposit(Long accountId, BigDecimal amount) throws AccountNotFoundException {
+    @Transactional
+    public TransactionDto deposit(Long id, BigDecimal amount) throws AccountNotFoundException {
         Transaction transaction = new Transaction();
-        transaction.setAccountId(accountId);
+        transaction.setAccountId(id);
         transaction.setAmount(amount);
         transaction.setCurrency("USD");  // Пример
         transaction.getTransactionType(TransactionType.DEPOSIT);
@@ -75,11 +76,12 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
         // Обновляем баланс аккаунта
-        accountService.updateBalance(accountId, amount);
+        accountService.updateBalance(id, amount);
 
         return transactionMapper.toDto(transaction);
     }
 
+    @Transactional
     public TransactionDto transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) {
         // Логика снятия средств с одного аккаунта и зачисления на другой
 
@@ -101,10 +103,10 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionDto withdraw(Long accountId, BigDecimal amount) throws AccountNotFoundException, IllegalArgumentException {
+    public TransactionDto withdraw(Long id, BigDecimal amount) throws AccountNotFoundException, IllegalArgumentException {
         // Создаем объект транзакции
         Transaction transaction = new Transaction();
-        transaction.setAccountId(accountId);
+        transaction.setAccountId(id);
         transaction.setAmount(amount.negate());  // Отрицательная сумма для снятия
         transaction.setCurrency("USD");  // Пример валюты, может быть параметром метода
         transaction.setTransactionType(TransactionType.WITHDRAWAL);  // Тип транзакции - снятие
@@ -114,18 +116,9 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
         // Обновляем баланс аккаунта с отрицательной суммой (снимаем средства)
-        accountService.updateBalance(accountId, amount.negate());
+        accountService.updateBalance(id, amount.negate());
 
         // Возвращаем DTO транзакции
         return transactionMapper.toDto(transaction);
-    }
-
-    // Удаление транзакции
-    @Transactional
-    public void delete(Long transactionId) {
-        Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new TransactionNotFoundException("Transaction with id " + transactionId + " not found"));
-
-        transactionRepository.delete(transaction);
     }
 }

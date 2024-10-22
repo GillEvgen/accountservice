@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class AccountNotFoundException extends ApiException {
 
-    public AccountNotFoundException(Long accountId) {
-        super("Аккаунт с  ID " + accountId + " не найден", HttpStatus.NOT_FOUND);
+    public AccountNotFoundException(Long id) {
+        super("Аккаунт с  ID " + id + " не найден", HttpStatus.NOT_FOUND);
     }
 }

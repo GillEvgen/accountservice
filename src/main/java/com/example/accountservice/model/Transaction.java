@@ -25,7 +25,6 @@ public class Transaction extends TransactionDto {
     @NotNull(message = "Аккаунт не может быть пустым")
     private Account account;
 
-
     @Column(nullable = false)
     @Positive(message = "Сумма должна быть положительной")
     private BigDecimal amount;

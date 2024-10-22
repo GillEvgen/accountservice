@@ -1,18 +1,33 @@
 package com.example.accountservice.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
 public class TransactionDto {
 
+    @NotNull(message = "ID не может быть null")
     private Long id;
+
+    @NotNull(message = "Сумма не может быть null")
+    @Positive(message = "Сумма должна быть положительной")
     private BigDecimal amount;
+
+    @NotNull(message = "Валюта не может быть null")
+    @Size(min = 3, max = 3, message = "Код валюты должен состоять из 3 символов.")
     private String currency;
+
+    @NotNull(message = "ID аккаунта не может быть null")
     private Long accountId;
+
+    @NotNull(message = "Дата транзакции не может быть null")
     private LocalDateTime transactionDate;
 
-    // Getters и Setters
+        // Getters и Setters
     public Long getId() {
         return id;
     }
