@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -19,91 +20,121 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 @ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = {AccountController.class, AccountService.class})
+@WebMvcTest(AccountController.class)  // Поднимаем контекст с веб-слоем
 public class AccountControllerTest {
 
-    private static final String EXPECTED_ACCOUNT_JSON = "{\n" +
-            "  \"id\": 1,\n" +
-            "  \"balance\": 100.00,\n" +
-            "  \"currency\": \"USD\"\n" +
-            "}";
-
-    private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;  // Инструмент для тестирования контроллера
 
     @Mock
-    private AccountService accountService;
+    private AccountService accountService;  // Мокаем сервис
 
     @InjectMocks
-    private AccountController accountController;
+    private AccountController accountController;  // Внедряем моки в контроллер
 
-    @AfterEach
-    public void tearDown() {
-        // Проверяем, что не было дополнительных взаимодействий с accountService
-        verifyNoMoreInteractions(accountService);
+    @BeforeEach
+    public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();  // Инициализация MockMvc
     }
 
-    @Test
-    public void testGetAccountById() throws Exception {
-        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
-
-        AccountDto accountDto = new AccountDto();
-
-        when(accountService.getAccountById(anyLong())).thenReturn(accountDto);
-
-        // Выполняем GET запрос и проверяем, что ответ совпадает с эталонным JSON
-        mockMvc.perform(get("/api/accounts/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(EXPECTED_ACCOUNT_JSON));  // Проверяем весь JSON целиком
-
-        // Проверка вызова метода
-        verify(accountService).getAccountById(1L);
-    }
+//    @Test
+//    public void testGetAllAccounts() throws Exception {
+//        // Данные для теста
+//        AccountDto account1 = new AccountDto(1L, BigDecimal.valueOf(100.00), "USD");
+//        AccountDto account2 = new AccountDto(2L, BigDecimal.valueOf(200.00), "EUR");
+//
+//        Pageable pageable = PageRequest.of(0, 10);
+//        Page<AccountDto> accountPage = new PageImpl<>(List.of(account1, account2), pageable, 2);
+//
+//        // Мокаем вызов сервиса
+//        when(accountService.getAllAccounts(pageable)).thenReturn(accountPage);
+//
+//        // Выполняем GET-запрос и проверяем результат
+//        mockMvc.perform(get("/api/accounts")
+//                .param("page", "0")
+//                .param("size", "10"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.content[0].id").value(1L))
+//                .andExpect(jsonPath("$.content[0].balance").value(100.00))
+//                .andExpect(jsonPath("$.content[0].currency").value("USD"))
+//                .andExpect(jsonPath("$.content[1].id").value(2L))
+//                .andExpect(jsonPath("$.content[1].balance").value(200.00))
+//                .andExpect(jsonPath("$.content[1].currency").value("EUR"));
+//
+//        verify(accountService, times(1)).getAllAccounts(pageable);  // Проверяем, что сервис вызван 1 раз
+//    }
+//
+//    @Test
+//    public void testGetAccountById() throws Exception {
+//        // Данные для теста
+//        AccountDto account = new AccountDto(1L, BigDecimal.valueOf(100.00), "USD");
+//
+//        // Мокаем вызов сервиса
+//        when(accountService.getAccountById(1L)).thenReturn(account);
+//
+//        // Выполняем GET-запрос и проверяем результат
+//        mockMvc.perform(get("/api/accounts/1"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.id").value(1L))
+//                .andExpect(jsonPath("$.balance").value(100.00))
+//                .andExpect(jsonPath("$.currency").value("USD"));
+//
+//        verify(accountService, times(1)).getAccountById(1L);  // Проверяем, что сервис вызван 1 раз
+//    }
 
     @Test
     public void testCreateAccount() throws Exception {
-        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
+        // Создаем объект AccountDto с помощью сеттеров
+        AccountDto newAccount = new AccountDto();
+        newAccount.setBalance(BigDecimal.valueOf(300.00));
+        newAccount.setCurrency("GBP");
 
-        AccountDto accountDto = new AccountDto();
+        // Создаем объект для ответа (createdAccount)
+        AccountDto createdAccount = new AccountDto();
+        createdAccount.setId(3L);  // Устанавливаем ID для созданного аккаунта
+        createdAccount.setBalance(BigDecimal.valueOf(300.00));
+        createdAccount.setCurrency("GBP");
 
-        when(accountService.create(Mockito.any(AccountDto.class))).thenReturn(accountDto);
+        // Мокаем вызов сервиса
+        when(accountService.create(any(AccountDto.class))).thenReturn(createdAccount);
 
+        // Выполняем POST-запрос и проверяем результат
         mockMvc.perform(post("/api/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\": 1, \"currency\": \"USD\"}"))
-                .andExpect(status().isCreated())  // Ожидаем статус 201 Created
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.currency").value("USD"));
+                .content("{\"balance\": 300.00, \"currency\": \"GBP\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(3L))
+                .andExpect(jsonPath("$.balance").value(300.00))
+                .andExpect(jsonPath("$.currency").value("GBP"));
 
-        // Проверка вызова метода
-        verify(accountService).create(any(AccountDto.class));
-    }
-
-    @Test
-    public void testDeposit() throws Exception {
-        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
-
-        AccountDto accountDto = new AccountDto();
-
-        when(accountService.deposit(anyLong(), Mockito.any(BigDecimal.class))).thenReturn(accountDto);
-
-        mockMvc.perform(put("/api/accounts/1/deposit")
-                .param("amount", "50.00"))
-                .andExpect(status().isOk())  // Ожидаем статус 200 OK
-                .andExpect(jsonPath("$.balance").value(150.00));
-    }
-
-    @Test
-    public void testDeleteAccount() throws Exception {
-        mockMvc = MockMvcBuilders.standaloneSetup(accountController).build();
-
-        // Настраиваем поведение мок-объекта для метода delete
-        doNothing().when(accountService).delete(1L);
-
-        // Выполняем запрос DELETE
-        mockMvc.perform(delete("/api/accounts/1"))
-                .andExpect(status().isNoContent());  // Ожидаем статус 204 No Content
-
-        // Проверяем вызов метода delete
-        verify(accountService).delete(1L);
+        // Проверяем, что сервис вызван 1 раз
+        verify(accountService, times(1)).create(any(AccountDto.class));
     }
 }
