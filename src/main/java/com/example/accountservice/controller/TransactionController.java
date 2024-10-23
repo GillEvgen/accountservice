@@ -26,7 +26,7 @@ public class TransactionController {
     }
 
     // Получение списка транзакций для аккаунта по ID с возвратом данных в формате JSON
-    @GetMapping(value = "/{accountId}/transactions", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}/transactions", produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<TransactionDto> getTransactionsByAccountId(@PathVariable("id") Long id, Pageable pageable) {
         return transactionService.getTransactionsByAccountId(id, pageable);
     }

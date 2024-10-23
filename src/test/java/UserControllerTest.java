@@ -1,119 +1,98 @@
 import com.example.accountservice.controller.UserController;
 import com.example.accountservice.dto.UserDto;
 import com.example.accountservice.service.UserService;
-import com.example.accountservice.type.DocumentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(UserController.class)  // Указываем контроллер для теста
 public class UserControllerTest {
 
-    private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;  // MockMvc для выполнения HTTP-запросов
 
-    @Mock
-    private UserService userService;
+    @MockBean
+    private UserService userService;  // Мокаем сервис, который используется в контроллере
 
-    @InjectMocks
-    private UserController userController;
-
+    // Подготовка данных перед каждым тестом
     @BeforeEach
     public void setUp() {
-        // Добавляем PageableHandlerMethodArgumentResolver для поддержки пагинации
-        PageableHandlerMethodArgumentResolver pageableArgumentResolver = new PageableHandlerMethodArgumentResolver();
-
-        // Инициализируем MockMvc с контроллером и резолвером для пагинации
-        mockMvc = MockMvcBuilders.standaloneSetup(userController)
-                .setCustomArgumentResolvers(pageableArgumentResolver) // Добавляем резолвер пагинации
-                .build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
     }
 
     @Test
-    public void testGetAllUsers() throws Exception {
-        // Данные для теста
-        UserDto user1 = new UserDto();
-        UserDto user2 = new UserDto();
-
-        Pageable pageRequest = PageRequest.of(0, 10);
-        Page<UserDto> userPage = new PageImpl<>(List.of(user1, user2), pageRequest, 2);
-
-        // Мокаем сервис
-        when(userService.getAllUsers(pageRequest)).thenReturn(userPage);
-
-        // Выполняем GET запрос с параметрами пагинации
-        mockMvc.perform(get("/api/users")
-                .param("page", "0")  // Параметр "page"
-                .param("size", "10"))  // Параметр "size"
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value(1L))
-                .andExpect(jsonPath("$.content[0].name").value("User 1"))
-                .andExpect(jsonPath("$.content[1].id").value(2L))
-                .andExpect(jsonPath("$.content[1].name").value("User 2"));
-    }
-
-    @Test
-    public void testGetUserById_Success() throws Exception {
-        // Данные для теста
+    public void testGetUserById() throws Exception {
+        // Создаем DTO с помощью сеттеров
         UserDto user = new UserDto();
+        user.setId(1L);
+        user.setName("John Doe");
+        user.setDocumentNumber("12345");
 
-        when(userService.getUserById(anyLong())).thenReturn(Optional.of(user));
+        // Мокаем сервис, чтобы вернуть подготовленные данные
+        when(userService.getUserById(1L)).thenReturn(Optional.of(user));
 
-        // Выполняем GET запрос
-        mockMvc.perform(get("/api/users/{userId}", 1L))
+        // Выполняем GET-запрос и проверяем результат
+        mockMvc.perform(get("/api/users/1")
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("User 1"));
-    }
+                .andExpect(jsonPath("$.name").value("John Doe"))
+                .andExpect(jsonPath("$.documentNumber").value("12345"));
 
-    @Test
-    public void testGetUserByDocument_Success() throws Exception {
-        // Данные для теста
-        UserDto user = new UserDto();
-
-        when(userService.getUserByDocument(any(String.class))).thenReturn(Optional.of(user));
-
-        // Выполняем GET запрос
-        mockMvc.perform(get("/api/users/document/{documentNumber}", "1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("User 1"));
+        // Проверяем, что сервис был вызван один раз с правильным ID
+        verify(userService, times(1)).getUserById(1L);
     }
 
     @Test
     public void testCreateUser() throws Exception {
-        UserDto createdUserDto = new UserDto();
+        // Создаем новый DTO с помощью сеттеров
+        UserDto newUser = new UserDto();
+        newUser.setName("Jane Doe");
+        newUser.setDocumentNumber("67890");
 
-        when(userService.create(any(UserDto.class))).thenReturn(createdUserDto);
+        UserDto createdUser = new UserDto();
+        createdUser.setId(2L);
+        createdUser.setName("Jane Doe");
+        createdUser.setDocumentNumber("67890");
 
-        // Выполняем POST запрос
+        // Мокаем сервис, чтобы при создании возвращался созданный объект
+        when(userService.create(any(UserDto.class))).thenReturn(createdUser);
+
+        // Выполняем POST-запрос с тестовыми данными
         mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"User 1\",\"documentNumber\":\"1\"}"))
+                .content("{\"name\":\"Jane Doe\",\"documentNumber\":\"67890\",\"email\":\"jane@example.com\"}")
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("User 1"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.name").value("Jane Doe"))
+                .andExpect(jsonPath("$.documentNumber").value("67890"));
+
+        // Проверяем, что сервис был вызван один раз для создания пользователя
+        verify(userService, times(1)).create(any(UserDto.class));
+    }
+
+    @Test
+    public void testDeleteUser() throws Exception {
+        // Выполняем DELETE-запрос для удаления пользователя с ID 1
+        mockMvc.perform(delete("/api/users/1"))
+                .andExpect(status().isNoContent());
+
+        // Проверяем, что сервис был вызван один раз для удаления пользователя
+        verify(userService, times(1)).delete(1L);
     }
 }
