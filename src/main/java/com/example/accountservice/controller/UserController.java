@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -23,41 +26,35 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Получение всех пользователей с пагинацией
-    @GetMapping
+    // Получение всех пользователей с пагинацией, возвращаем JSON
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<UserDto> getAllUsers(Pageable pageable) {
         return userService.getAllUsers(pageable);
     }
 
-    // Получение пользователя по ID
-    @GetMapping("/{userId}")
+    // Получение пользователя по ID, возвращаем JSON
+    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDto getUserById(@PathVariable Long userId) throws UserNotFoundException {
         return userService.getUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    // Получение пользователя по номеру документа
-    @GetMapping("/document/{documentNumber}")
+    // Получение пользователя по номеру документа, возвращаем JSON
+    @GetMapping(value = "/document/{documentNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDto getUserByDocument(@PathVariable String documentNumber) throws UserNotFoundException {
         return userService.getUserByDocument(documentNumber)
                 .orElseThrow(() -> new UserNotFoundException(documentNumber));
     }
 
-    // Создание нового пользователя
-    @PostMapping
+    // Создание нового пользователя, принимаем и возвращаем JSON
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@Valid @RequestBody UserDto userDto) {
         return userService.create(userDto);
     }
 
-//    // Обновление данных пользователя
-//    @PutMapping("/{userId}")
-//    public UserDto updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
-//        return userService.updateUser(userId, userDto);
-//    }
-
-    // Удаление пользователя
-    @DeleteMapping("/{userId}")
+    // Удаление пользователя по ID
+    @DeleteMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId) {
         userService.delete(userId);
